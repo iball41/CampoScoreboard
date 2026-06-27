@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Campo vs Vanden</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@500&display=swap');
+:root {
+  --campo:#C8102E;--campo-light:#FFF0F2;--campo-mid:#F5C2CA;
+  --opp:#5A6270;--opp-light:#F0F1F3;--opp-mid:#C8CAD0;
+  --bg:#EDEEF2;--card:#FFFFFF;--border:#D8DAE0;
+  --text:#1A1C22;--muted:#7A7F90;
+  --sh:0 1px 4px rgba(0,0,0,0.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;display:flex;flex-direction:column;}
+
+.hdr{background:var(--campo);color:#fff;padding:6px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;box-shadow:0 2px 6px rgba(200,16,46,0.35);}
+.hdr-title{flex:1;font-family:'Oswald',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.hdr-right{display:flex;align-items:center;gap:6px;}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#ff4444;flex-shrink:0;transition:background .3s;}
+.sync-dot.ok{background:#44ff88;}
+.hdr select{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:14px;color:#fff;font-size:.75rem;font-weight:600;font-family:'Inter',sans-serif;padding:3px 10px;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;}
+.hdr select option{color:#000;background:#fff;}
+
+.score-strip{background:var(--card);border-bottom:1px solid var(--border);padding:5px 12px;display:grid;grid-template-columns:1fr auto 1fr;gap:0 6px;align-items:center;flex-shrink:0;}
+.tc{display:flex;flex-direction:column;gap:0px;}
+.tc.opp{align-items:flex-end;}
+.tc-school{font-family:'Oswald',sans-serif;font-size:.58rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.tc-mascot{font-family:'Oswald',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.tc.campo .tc-mascot{color:var(--campo);}
+.tc.opp   .tc-mascot{color:var(--opp);}
+.tc-score{font-family:'Oswald',sans-serif;font-size:1.9rem;font-weight:700;line-height:1;}
+.tc.campo .tc-score{color:var(--campo);}
+.tc.opp   .tc-score{color:var(--opp);}
+.score-adj{display:flex;gap:3px;margin-top:2px;}
+.adj-btn{background:var(--bg);border:1px solid var(--border);border-radius:5px;font-size:.58rem;font-weight:700;padding:1px 7px;cursor:pointer;color:var(--text);font-family:'Inter',sans-serif;user-select:none;-webkit-user-select:none;transition:transform .1s,opacity .1s;}
+.adj-btn.pressed{transform:scale(.88);opacity:.65;}
+.adj-btn.minus{color:var(--muted);}
+.to-dots{display:flex;gap:3px;margin-top:2px;}
+.tc.opp .to-dots{flex-direction:row-reverse;}
+.dot{width:7px;height:7px;border-radius:50%;cursor:pointer;}
+.tc.campo .dot{background:var(--campo);}
+.tc.opp   .dot{background:var(--opp);}
+.dot.used{background:var(--border)!important;}
+.fl{font-size:.56rem;color:var(--muted);}
+.fv{font-family:'Oswald',sans-serif;font-size:.78rem;color:#b85000;font-weight:700;}
+.cc{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.clk{font-family:'Roboto Mono',monospace;font-size:1.15rem;font-weight:500;color:var(--text);letter-spacing:1px;}
+.clk.run{color:#1a7a40;}
+.clk-btns{display:flex;gap:3px;}
+.cb{background:var(--bg);border:1px solid var(--border);border-radius:5px;font-size:.58rem;font-weight:600;padding:2px 7px;cursor:pointer;color:var(--text);}
+.cb.go{color:#1a7a40;border-color:#1a7a4055;}
+.cb.stop{color:var(--campo);border-color:rgba(200,16,46,.3);}
+
+.opp-bar{background:var(--card);border-bottom:1px solid var(--border);padding:3px 10px;display:flex;align-items:center;gap:5px;flex-shrink:0;}
+.opp-bar label{font-size:.58rem;color:var(--muted);white-space:nowrap;}
+.opp-bar input{background:transparent;border:none;font-family:'Oswald',sans-serif;font-size:.75rem;font-weight:500;color:var(--opp);letter-spacing:.06em;text-transform:uppercase;outline:none;min-width:0;}
+.opp-bar .sep{color:var(--border);font-size:.7rem;}
+
+.tabs{display:flex;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0;}
+.tab{flex:1;padding:6px 0;text-align:center;font-size:.72rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;}
+.tab.active{color:var(--campo);border-bottom-color:var(--campo);}
+
+.panel{display:none;flex:1;overflow-y:auto;overflow-x:hidden;}
+.panel.active{display:flex;flex-direction:column;}
+
+#panel-scoring{padding:5px;gap:4px;}
+.tsec{background:var(--card);border-radius:10px;box-shadow:var(--sh);overflow:hidden;flex-shrink:0;}
+.tsec-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 10px;border-bottom:1px solid var(--border);}
+.tsec-label{display:flex;flex-direction:column;}
+.tsec-school{font-family:'Oswald',sans-serif;font-size:.55rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.tsec-mascot{font-family:'Oswald',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.tsec.campo .tsec-mascot{color:var(--campo);}
+.tsec.opp   .tsec-mascot{color:var(--opp);}
+.fr{display:flex;align-items:center;gap:4px;font-size:.62rem;color:var(--muted);}
+.fc{font-family:'Oswald',sans-serif;font-size:.85rem;color:#b85000;font-weight:700;min-width:12px;text-align:center;}
+.fb{background:#FFF3EE;border:1px solid #F0C0A0;border-radius:4px;padding:1px 6px;font-size:.58rem;font-weight:600;color:#b85000;cursor:pointer;}
+
+.bgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;padding:5px;}
+.bb{border:none;border-radius:8px;font-family:'Oswald',sans-serif;font-weight:700;cursor:pointer;padding:9px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 5px rgba(0,0,0,.13);user-select:none;-webkit-user-select:none;transition:transform .1s,opacity .1s;}
+.bb.pressed{transform:scale(.91);opacity:.7;}
+.bb .t{font-size:1.15rem;line-height:1;}
+.bb .b{font-size:.56rem;letter-spacing:.06em;opacity:.85;margin-top:1px;}
+.tsec.campo .bm{background:var(--campo);color:#fff;}
+.tsec.campo .bmiss{background:var(--campo-light);color:var(--campo);border:1px solid var(--campo-mid);box-shadow:none;}
+.tsec.campo .bft{background:#FFF3C0;color:#8B6000;border:1px solid #E0C060;box-shadow:none;}
+.tsec.opp .bm{background:var(--opp);color:#fff;}
+.tsec.opp .bmiss{background:var(--opp-light);color:var(--opp);border:1px solid var(--opp-mid);box-shadow:none;}
+.tsec.opp .bft{background:#FFF3C0;color:#8B6000;border:1px solid #E0C060;box-shadow:none;}
+
+.mrow{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;padding:0 5px 5px;}
+.mb{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 2px;font-size:.6rem;font-family:'Inter',sans-serif;font-weight:600;color:var(--text);cursor:pointer;text-align:center;user-select:none;-webkit-user-select:none;transition:transform .1s,opacity .1s;}
+.mb.pressed{transform:scale(.91);opacity:.7;}
+.mb.r{color:var(--campo);background:var(--campo-light);border-color:var(--campo-mid);}
+.mb.o{color:var(--opp);background:var(--opp-light);border-color:var(--opp-mid);}
+
+.cnrow{display:flex;gap:5px;padding:0 5px;flex-shrink:0;}
+.cnrow input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-size:.72rem;font-family:'Inter',sans-serif;color:var(--text);outline:none;box-shadow:var(--sh);}
+.cnrow input:focus{border-color:rgba(200,16,46,.4);}
+.cnrow button{background:var(--campo);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:.7rem;font-weight:600;cursor:pointer;}
+
+#panel-stats{padding:8px;gap:6px;}
+.stat-card{background:var(--card);border-radius:10px;box-shadow:var(--sh);overflow:hidden;}
+.stat-card-hdr{display:grid;grid-template-columns:1fr 1fr 1fr;padding:5px 10px;border-bottom:1px solid var(--border);font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
+.s-campo{color:var(--campo);}
+.s-opp{color:var(--opp);text-align:right;}
+.s-label{color:var(--muted);text-align:center;}
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;padding:5px 10px;border-bottom:1px solid rgba(0,0,0,.04);align-items:center;}
+.stat-row:last-child{border-bottom:none;}
+.stat-val{font-family:'Oswald',sans-serif;font-size:.9rem;font-weight:700;}
+.stat-val.c{color:var(--campo);}
+.stat-val.o{color:var(--opp);text-align:right;}
+.stat-lbl{font-size:.62rem;color:var(--muted);text-align:center;}
+.stat-pct{font-size:.58rem;color:var(--muted);display:block;}
+
+#panel-log{padding:8px;gap:6px;}
+.log-controls{display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;}
+.lc{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-size:.7rem;font-weight:500;cursor:pointer;color:var(--text);box-shadow:var(--sh);}
+.lc.d{color:var(--campo);border-color:var(--campo-mid);}
+.log-list{display:flex;flex-direction:column;gap:5px;}
+.le{background:var(--card);border-radius:8px;padding:7px 10px;box-shadow:0 1px 3px rgba(0,0,0,.07);display:grid;grid-template-columns:auto 1fr auto;gap:5px;align-items:start;animation:sd .15s ease;}
+@keyframes sd{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+.le-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.le-txt{font-size:.75rem;font-weight:600;line-height:1.3;}
+.le-team{font-size:.6rem;font-weight:500;opacity:.55;display:block;}
+.le-score{font-family:'Oswald',sans-serif;font-size:.65rem;color:var(--muted);display:block;margin-top:1px;}
+.le-ts{text-align:right;display:flex;flex-direction:column;gap:1px;}
+.ts-line{font-family:'Roboto Mono',monospace;font-size:.55rem;white-space:nowrap;}
+.tw{color:#5080b0;}.tg{color:#1a7a40;}.tv{color:#b85000;}
+
+#panel-settings{padding:8px;gap:8px;}
+.scard{background:var(--card);border-radius:10px;padding:12px;box-shadow:var(--sh);flex-shrink:0;}
+.scard h3{font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+.sr{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.sr label{font-size:.75rem;color:var(--text);min-width:80px;}
+.sr input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:.78rem;font-family:'Inter',sans-serif;color:var(--text);outline:none;}
+.sr button{background:var(--campo);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+.vd{font-size:.68rem;color:var(--muted);}
+.dbtn{width:100%;background:#FFF0F2;border:1px solid var(--campo-mid);border-radius:8px;padding:10px;color:var(--campo);font-size:.78rem;font-weight:600;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-title">🐾 Cougars vs Vikings</div>
+  <div class="hdr-right">
+    <div class="sync-dot" id="syncDot" title="Firebase sync status"></div>
+    <select id="periodSel" onchange="changePeriod()">
+      <option value="Half 1">Half 1</option>
+      <option value="Half 2">Half 2</option>
+      <option value="OT">OT</option>
+    </select>
+  </div>
+</div>
+
+<div class="score-strip">
+  <div class="tc campo">
+    <div class="tc-school">Campolindo</div>
+    <div class="tc-mascot">Cougars</div>
+    <div class="tc-score" id="campoScore">0</div>
+    <div class="score-adj">
+      <button class="adj-btn minus" onclick="scoreAdj('campo',-1)">−1</button>
+      <button class="adj-btn" onclick="scoreAdj('campo',1)">+1</button>
+    </div>
+    <div class="to-dots" id="campoToDots">
+      <div class="dot" id="cto0"></div><div class="dot" id="cto1"></div>
+      <div class="dot" id="cto2"></div><div class="dot" id="cto3"></div>
+    </div>
+    <div class="fl">Fouls: <span class="fv" id="campoFoulsDisp">0</span></div>
+  </div>
+  <div class="cc">
+    <div class="clk" id="gameClock">20:00</div>
+    <div class="clk-btns">
+      <button class="cb go" onclick="startClock()">▶</button>
+      <button class="cb stop" onclick="stopClock()">⏸</button>
+    </div>
+  </div>
+  <div class="tc opp">
+    <div class="tc-school" id="oppSchoolDisp">Vanden</div>
+    <div class="tc-mascot" id="oppMascotDisp">Vikings</div>
+    <div class="tc-score" id="oppScore">0</div>
+    <div class="score-adj" style="justify-content:flex-end;">
+      <button class="adj-btn minus" onclick="scoreAdj('opp',-1)">−1</button>
+      <button class="adj-btn" onclick="scoreAdj('opp',1)">+1</button>
+    </div>
+    <div class="to-dots" id="oppToDots">
+      <div class="dot" id="oto0"></div><div class="dot" id="oto1"></div>
+      <div class="dot" id="oto2"></div><div class="dot" id="oto3"></div>
+    </div>
+    <div class="fl" style="text-align:right">Fouls: <span class="fv" id="oppFoulsDisp">0</span></div>
+  </div>
+</div>
+
+<div class="opp-bar">
+  <label>✏️</label>
+  <input type="text" id="oppSchoolInput" value="Vanden" oninput="updateOppNames()" maxlength="20" style="flex:2;">
+  <span class="sep">|</span>
+  <input type="text" id="oppMascotInput" value="Vikings" oninput="updateOppNames()" maxlength="14" style="flex:1;">
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('scoring')">Scoring</div>
+  <div class="tab" onclick="showTab('stats')">Stats</div>
+  <div class="tab" onclick="showTab('log')">Log</div>
+  <div class="tab" onclick="showTab('settings')">Settings</div>
+</div>
+
+<div class="panel active" id="panel-scoring">
+  <div class="tsec campo">
+    <div class="tsec-hdr">
+      <div class="tsec-label">
+        <div class="tsec-school">Campolindo</div>
+        <div class="tsec-mascot">Cougars</div>
+      </div>
+      <div class="fr">Fouls <span class="fc" id="campoFouls">0</span>
+        <button class="fb" onclick="addFoul('campo',1)">+F</button>
+        <button class="fb" onclick="addFoul('campo',-1)">−F</button>
+      </div>
+    </div>
+    <div class="bgrid">
+      <button class="bb bm" onclick="logPlay('campo','2-pt Make',2)"><span class="t">+2</span><span class="b">PT FG</span></button>
+      <button class="bb bft" onclick="logPlay('campo','Free Throw',1)"><span class="t" style="font-size:.9rem">Free</span><span class="b">Throw</span></button>
+      <button class="bb bm" onclick="logPlay('campo','3-pt Make',3)"><span class="t">+3</span><span class="b">PT FG</span></button>
+      <button class="bb bmiss" onclick="logPlay('campo','2-pt Miss',0)"><span class="t" style="font-size:.9rem">2PT</span><span class="b">Miss</span></button>
+      <div></div>
+      <button class="bb bmiss" onclick="logPlay('campo','3-pt Miss',0)"><span class="t" style="font-size:.9rem">3PT</span><span class="b">Miss</span></button>
+    </div>
+    <div class="mrow">
+      <button class="mb r" onclick="logPlay('campo','Rebound',0)">REB</button>
+      <button class="mb r" onclick="logPlay('campo','Steal',0)">STL</button>
+      <button class="mb r" onclick="logPlay('campo','Block',0)">BLK</button>
+      <button class="mb" onclick="logPlay('campo','Turnover',0)">TO</button>
+      <button class="mb" onclick="addFoul('campo',1);logPlay('campo','Foul',0)">Foul</button>
+    </div>
+  </div>
+
+  <div class="tsec opp">
+    <div class="tsec-hdr">
+      <div class="tsec-label">
+        <div class="tsec-school" id="oppSectionSchool">Vanden</div>
+        <div class="tsec-mascot" id="oppSectionMascot">Vikings</div>
+      </div>
+      <div class="fr">Fouls <span class="fc" id="oppFouls">0</span>
+        <button class="fb" onclick="addFoul('opp',1)">+F</button>
+        <button class="fb" onclick="addFoul('opp',-1)">−F</button>
+      </div>
+    </div>
+    <div class="bgrid">
+      <button class="bb bm" onclick="logPlay('opp','2-pt Make',2)"><span class="t">+2</span><span class="b">PT FG</span></button>
+      <button class="bb bft" onclick="logPlay('opp','Free Throw',1)"><span class="t" style="font-size:.9rem">Free</span><span class="b">Throw</span></button>
+      <button class="bb bm" onclick="logPlay('opp','3-pt Make',3)"><span class="t">+3</span><span class="b">PT FG</span></button>
+      <button class="bb bmiss" onclick="logPlay('opp','2-pt Miss',0)"><span class="t" style="font-size:.9rem">2PT</span><span class="b">Miss</span></button>
+      <div></div>
+      <button class="bb bmiss" onclick="logPlay('opp','3-pt Miss',0)"><span class="t" style="font-size:.9rem">3PT</span><span class="b">Miss</span></button>
+    </div>
+    <div class="mrow">
+      <button class="mb o" onclick="logPlay('opp','Rebound',0)">REB</button>
+      <button class="mb o" onclick="logPlay('opp','Steal',0)">STL</button>
+      <button class="mb o" onclick="logPlay('opp','Block',0)">BLK</button>
+      <button class="mb" onclick="logPlay('opp','Turnover',0)">TO</button>
+      <button class="mb" onclick="addFoul('opp',1);logPlay('opp','Foul',0)">Foul</button>
+    </div>
+  </div>
+
+  <div class="cnrow">
+    <input type="text" id="customNote" placeholder="Custom note…">
+    <button onclick="logCustom()">Log</button>
+  </div>
+</div>
+
+<div class="panel" id="panel-stats">
+  <div class="stat-card">
+    <div class="stat-card-hdr">
+      <div class="s-campo">CAMPO</div><div class="s-label">STAT</div><div class="s-opp" id="statsOppLabel">MC</div>
+    </div>
+    <div class="stat-row"><div class="stat-val c"><span id="s-c-2m">0</span>/<span id="s-c-2a">0</span><span class="stat-pct" id="s-c-2pct">--%</span></div><div class="stat-lbl">2PT FG</div><div class="stat-val o"><span id="s-o-2m">0</span>/<span id="s-o-2a">0</span><span class="stat-pct" id="s-o-2pct">--%</span></div></div>
+    <div class="stat-row"><div class="stat-val c"><span id="s-c-3m">0</span>/<span id="s-c-3a">0</span><span class="stat-pct" id="s-c-3pct">--%</span></div><div class="stat-lbl">3PT FG</div><div class="stat-val o"><span id="s-o-3m">0</span>/<span id="s-o-3a">0</span><span class="stat-pct" id="s-o-3pct">--%</span></div></div>
+    <div class="stat-row"><div class="stat-val c"><span id="s-c-ftm">0</span>/<span id="s-c-fta">0</span><span class="stat-pct" id="s-c-ftpct">--%</span></div><div class="stat-lbl">Free Throws</div><div class="stat-val o"><span id="s-o-ftm">0</span>/<span id="s-o-fta">0</span><span class="stat-pct" id="s-o-ftpct">--%</span></div></div>
+    <div class="stat-row"><div class="stat-val c" id="s-c-reb">0</div><div class="stat-lbl">Rebounds</div><div class="stat-val o" id="s-o-reb">0</div></div>
+    <div class="stat-row"><div class="stat-val c" id="s-c-stl">0</div><div class="stat-lbl">Steals</div><div class="stat-val o" id="s-o-stl">0</div></div>
+    <div class="stat-row"><div class="stat-val c" id="s-c-blk">0</div><div class="stat-lbl">Blocks</div><div class="stat-val o" id="s-o-blk">0</div></div>
+    <div class="stat-row"><div class="stat-val c" id="s-c-to">0</div><div class="stat-lbl">Turnovers</div><div class="stat-val o" id="s-o-to">0</div></div>
+    <div class="stat-row"><div class="stat-val c" id="s-c-foul">0</div><div class="stat-lbl">Fouls</div><div class="stat-val o" id="s-o-foul">0</div></div>
+    <div class="stat-row"><div class="stat-val c" id="s-c-pts">0</div><div class="stat-lbl">Points</div><div class="stat-val o" id="s-o-pts">0</div></div>
+  </div>
+</div>
+
+<div class="panel" id="panel-log">
+  <div class="log-controls">
+    <button class="lc" onclick="undoLast()">↩ Undo</button>
+    <button class="lc" onclick="copyLog()">📋 Copy</button>
+    <button class="lc" onclick="showExportBox(buildCSV())">⬇ Export</button>
+    <button class="lc d" onclick="confirmReset()">🗑 Reset</button>
+  </div>
+  <div class="log-list" id="logList"></div>
+</div>
+
+<div class="panel" id="panel-settings">
+  <div class="scard">
+    <h3>Clock</h3>
+    <div class="sr"><label>Set clock</label><input type="text" id="clockSetInput" placeholder="20:00"><button onclick="setClock()">Set</button></div>
+  </div>
+  <div class="scard">
+    <h3>🎬 Video Sync</h3>
+    <div class="sr"><label>Video time</label><input type="text" id="videoInput" placeholder="0:00 or 1:23:45"><button onclick="syncVideo()">Sync</button></div>
+    <div class="vd">Current: <span id="videoDisplay" style="font-family:'Roboto Mono',monospace;color:#b85000">—</span></div>
+  </div>
+  <div class="scard">
+    <h3>Timeouts</h3>
+    <div class="sr"><label>Campo left</label><input type="number" id="campoTOSet" value="4" min="0" max="9"><button onclick="setTimeouts('campo')">Set</button></div>
+    <div class="sr"><label>Opp left</label><input type="number" id="oppTOSet" value="4" min="0" max="9"><button onclick="setTimeouts('opp')">Set</button></div>
+  </div>
+  <button class="dbtn" onclick="confirmReset()">🗑 Reset Entire Game</button>
+</div>
+
+<!-- Firebase compat SDKs (Safari-safe) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyD07zLJ7LIIRYzVU-8NSNbWi7Xpdk6Nokw",
+  authDomain: "campo-summerfbb.firebaseapp.com",
+  databaseURL: "https://campo-summerfbb-default-rtdb.firebaseio.com",
+  projectId: "campo-summerfbb",
+  storageBucket: "campo-summerfbb.firebasestorage.app",
+  messagingSenderId: "377034371618",
+  appId: "1:377034371618:web:7773ab84b636fcb14e107b"
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const GAME = 'games/vanden';
+
+// ── STATE ──
+let scores={campo:0,opp:0},fouls={campo:0,opp:0},toLeft={campo:4,opp:4};
+let clockSec=1200,running=false,tick=null,period='Half 1';
+let vidOffset=null,vidAt=null,log=[];
+let st={
+  campo:{fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0},
+  opp:  {fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0}
+};
+let fbReady=false;
+
+// ── FIREBASE SYNC ──
+function syncDot(ok){
+  const d=document.getElementById('syncDot');
+  d.classList.toggle('ok',ok);
+}
+
+function saveState(){
+  if(!fbReady)return;
+  db.ref(GAME+'/state').set({scores,fouls,toLeft,clockSec,period,st}).then(()=>syncDot(true)).catch(()=>syncDot(false));
+}
+
+function saveLogEntry(entry){
+  if(!fbReady)return;
+  db.ref(GAME+'/log').push(entry).catch(()=>syncDot(false));
+}
+
+// Load state from Firebase on open
+db.ref(GAME+'/state').once('value').then((snap)=>{
+  fbReady=true;syncDot(true);
+  const d=snap.val();
+  if(!d)return;
+  scores=d.scores||scores;
+  fouls=d.fouls||fouls;
+  toLeft=d.toLeft||toLeft;
+  clockSec=d.clockSec||clockSec;
+  period=d.period||period;
+  st=d.st||st;
+  // update period selector
+  const opts=['Half 1','Half 2','OT'];
+  document.getElementById('periodSel').selectedIndex=opts.indexOf(period);
+  // render
+  ['campo','opp'].forEach(t=>{
+    document.getElementById(t+'Score').textContent=scores[t];
+    document.getElementById(t+'Fouls').textContent=fouls[t];
+    document.getElementById(t+'FoulsDisp').textContent=fouls[t];
+    renderDots(t);
+  });
+  renderClk();
+  refreshStats();
+});
+
+// Load log from Firebase on open
+db.ref(GAME+'/log').once('value').then((snap)=>{
+  const d=snap.val();
+  if(!d)return;
+  log=[];
+  document.getElementById('logList').innerHTML='';
+  // entries come in chronological order, render oldest first then newest on top
+  const entries=Object.values(d);
+  entries.sort((a,b)=>a.ts-b.ts);
+  entries.forEach(e=>{log.unshift(e);renderEntry(e);});
+});
+
+// ── TABS ──
+window.showTab=function(n){
+  const names=['scoring','stats','log','settings'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',names[i]===n));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+n).classList.add('active');
+};
+
+// ── BUTTON FEEDBACK ──
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('.bb,.mb,.fb,.cb,.adj-btn,.lc,.cnrow button').forEach(btn=>{
+    btn.addEventListener('touchstart',()=>{btn.classList.add('pressed');setTimeout(()=>btn.classList.remove('pressed'),180);},{passive:true});
+  });
+  document.getElementById('customNote').addEventListener('keydown',e=>{if(e.key==='Enter')logCustom();});
+});
+
+// ── CLOCK ──
+function fmt(s){const m=Math.floor(Math.abs(s)/60),sec=Math.abs(s)%60;return`${m}:${sec.toString().padStart(2,'0')}`;}
+function renderClk(){const e=document.getElementById('gameClock');e.textContent=fmt(clockSec);e.className='clk'+(running?' run':'');}
+window.startClock=function(){if(running)return;running=true;tick=setInterval(()=>{if(clockSec>0){clockSec--;renderClk();}else stopClock();},1000);};
+window.stopClock=function(){running=false;clearInterval(tick);renderClk();};
+window.setClock=function(){const p=document.getElementById('clockSetInput').value.trim().split(':');if(p.length===2){clockSec=+p[0]*60+ +p[1];stopClock();saveState();}};
+window.changePeriod=function(){
+  const sel=document.getElementById('periodSel');
+  period=sel.value;
+  clockSec=period==='OT'?300:1200;
+  stopClock();
+  addEntry('neutral',period+' Started');
+  saveState();
+};
+
+// ── VIDEO ──
+function wallNow(){return new Date().toLocaleTimeString();}
+function gameNow(){return fmt(clockSec);}
+function vidNow(){
+  if(vidOffset===null)return'—';
+  const t=vidOffset+Math.floor((Date.now()-vidAt)/1000);
+  const h=Math.floor(t/3600),m=Math.floor((t%3600)/60),s=t%60;
+  return h?`${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`:`${m}:${s.toString().padStart(2,'0')}`;
+}
+window.syncVideo=function(){
+  const p=document.getElementById('videoInput').value.trim().split(':').map(Number);
+  if(p.length===2)vidOffset=p[0]*60+p[1];
+  else if(p.length===3)vidOffset=p[0]*3600+p[1]*60+p[2];
+  else return;
+  vidAt=Date.now();
+};
+setInterval(()=>document.getElementById('videoDisplay').textContent=vidNow(),500);
+
+// ── OPP NAME ──
+window.updateOppNames=function(){
+  const school=document.getElementById('oppSchoolInput').value.trim()||'Opponent';
+  const mascot=document.getElementById('oppMascotInput').value.trim()||'Team';
+  document.getElementById('oppSchoolDisp').textContent=school;
+  document.getElementById('oppMascotDisp').textContent=mascot;
+  document.getElementById('oppSectionSchool').textContent=school;
+  document.getElementById('oppSectionMascot').textContent=mascot;
+  document.getElementById('statsOppLabel').textContent=school.slice(0,6).toUpperCase();
+};
+
+// ── SCORE / FOULS ──
+function adjustScore(t,d){scores[t]=Math.max(0,scores[t]+d);document.getElementById(t+'Score').textContent=scores[t];refreshStats();}
+window.addFoul=function(t,d){fouls[t]=Math.max(0,fouls[t]+d);document.getElementById(t+'Fouls').textContent=fouls[t];document.getElementById(t+'FoulsDisp').textContent=fouls[t];saveState();};
+
+window.scoreAdj=function(team,delta){
+  adjustScore(team,delta);
+  const label=delta>0?'Score +1 (correction)':'Score −1 (correction)';
+  addEntry(team,label);
+  saveState();
+};
+
+// ── TIMEOUTS ──
+window.useTo=function(team){if(toLeft[team]>0){toLeft[team]--;renderDots(team);addEntry(team,'Timeout');saveState();}};
+window.setTimeouts=function(team){const v=+document.getElementById(team+'TOSet').value;if(!isNaN(v)){toLeft[team]=Math.max(0,Math.min(9,v));renderDots(team);saveState();}};
+function renderDots(team){
+  const p=team==='campo'?'c':'o';
+  for(let i=0;i<4;i++){const d=document.getElementById(p+'to'+i);if(d)d.classList.toggle('used',i>=toLeft[team]);}
+}
+
+// ── PLAY LOG ──
+window.logPlay=function(team,event,pts){
+  if(pts>0)adjustScore(team,pts);
+  if(team==='campo'||team==='opp'){
+    const s=st[team];
+    if(event==='2-pt Make'){s.fg2m++;s.fg2a++;}
+    else if(event==='2-pt Miss'){s.fg2a++;}
+    else if(event==='3-pt Make'){s.fg3m++;s.fg3a++;}
+    else if(event==='3-pt Miss'){s.fg3a++;}
+    else if(event==='Free Throw'){s.ftm++;s.fta++;}
+    else if(event==='Rebound'){s.reb++;}
+    else if(event==='Steal'){s.stl++;}
+    else if(event==='Block'){s.blk++;}
+    else if(event==='Turnover'){s.to++;}
+    else if(event==='Foul'){s.foul++;}
+    refreshStats();
+  }
+  addEntry(team,event);
+  saveState();
+};
+
+function addEntry(team,event){
+  const e={team,event,wall:wallNow(),game:gameNow(),vid:vidNow(),period,score:`${scores.campo}–${scores.opp}`,ts:Date.now()};
+  log.unshift(e);
+  renderEntry(e);
+  saveLogEntry(e);
+}
+
+window.logCustom=function(){
+  const v=document.getElementById('customNote').value.trim();
+  if(!v)return;
+  addEntry('neutral',v);
+  document.getElementById('customNote').value='';
+};
+
+// ── STATS ──
+function pct(m,a){return a===0?'—':`${Math.round(m/a*100)}%`;}
+function refreshStats(){
+  ['campo','opp'].forEach(t=>{
+    const s=st[t],x=t==='campo'?'c':'o';
+    document.getElementById(`s-${x}-2m`).textContent=s.fg2m;
+    document.getElementById(`s-${x}-2a`).textContent=s.fg2a;
+    document.getElementById(`s-${x}-2pct`).textContent=pct(s.fg2m,s.fg2a);
+    document.getElementById(`s-${x}-3m`).textContent=s.fg3m;
+    document.getElementById(`s-${x}-3a`).textContent=s.fg3a;
+    document.getElementById(`s-${x}-3pct`).textContent=pct(s.fg3m,s.fg3a);
+    document.getElementById(`s-${x}-ftm`).textContent=s.ftm;
+    document.getElementById(`s-${x}-fta`).textContent=s.fta;
+    document.getElementById(`s-${x}-ftpct`).textContent=pct(s.ftm,s.fta);
+    document.getElementById(`s-${x}-reb`).textContent=s.reb;
+    document.getElementById(`s-${x}-stl`).textContent=s.stl;
+    document.getElementById(`s-${x}-blk`).textContent=s.blk;
+    document.getElementById(`s-${x}-to`).textContent=s.to;
+    document.getElementById(`s-${x}-foul`).textContent=s.foul;
+    document.getElementById(`s-${x}-pts`).textContent=scores[t];
+  });
+}
+
+// ── LOG RENDER ──
+function renderEntry(e){
+  const list=document.getElementById('logList');
+  const tc=e.team==='campo'?'var(--campo)':e.team==='opp'?'var(--opp)':'var(--muted)';
+  const school=document.getElementById('oppSchoolInput').value.trim()||'Opp';
+  const tl=e.team==='campo'?'CAMPO':e.team==='opp'?school.toUpperCase().slice(0,8):'';
+  const d=document.createElement('div');d.className='le';
+  d.innerHTML=`<div class="le-dot" style="background:${tc}"></div>
+    <div class="le-txt">${tl?`<span class="le-team">${tl}</span>`:''} ${e.event}<span class="le-score">${e.score} · ${e.period}</span></div>
+    <div class="le-ts">
+      <span class="ts-line tw">⏰ ${e.wall}</span>
+      <span class="ts-line tg">🏀 ${e.game}</span>
+      <span class="ts-line tv">🎬 ${e.vid}</span>
+    </div>`;
+  list.insertBefore(d,list.firstChild);
+}
+
+// ── UNDO ──
+window.undoLast=function(){
+  if(!log.length)return;
+  log.shift();
+  const l=document.getElementById('logList');
+  if(l.firstChild)l.removeChild(l.firstChild);
+  alert('Removed from view. Firebase log entry remains for record. Adjust score manually if needed.');
+};
+
+// ── EXPORT ──
+function buildCSV(){
+  const rows=['Period,ActualT,GameT,VideoT,Team,Event,Score'];
+  [...log].reverse().forEach(e=>rows.push(`"${e.period}","${e.wall}","${e.game}","${e.vid}","${e.team}","${e.event}","${e.score}"`));
+  return rows.join('\n');
+}
+window.copyLog=function(){
+  const csv=buildCSV();
+  navigator.clipboard.writeText(csv).then(()=>alert('✅ Copied!')).catch(()=>showExportBox(csv));
+};
+window.showExportBox=function(csv){
+  let box=document.getElementById('exportBox');
+  if(!box){
+    box=document.createElement('div');box.id='exportBox';
+    box.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;display:flex;flex-direction:column;padding:16px;gap:8px;';
+    box.innerHTML=`<div style="background:#fff;border-radius:10px;padding:10px;flex:1;display:flex;flex-direction:column;gap:8px;overflow:hidden;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:.8rem;font-weight:600;">Select All → Copy</span>
+        <button onclick="document.getElementById('exportBox').remove()" style="background:var(--campo);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:.75rem;font-weight:600;cursor:pointer;">Close</button>
+      </div>
+      <textarea readonly style="flex:1;background:#EDEEF2;border:1px solid #D8DAE0;border-radius:8px;padding:8px;font-family:monospace;font-size:.65rem;resize:none;outline:none;">${csv}</textarea>
+    </div>`;
+    document.body.appendChild(box);
+  } else {
+    box.querySelector('textarea').value=csv;
+    box.style.display='flex';
+  }
+};
+
+// ── RESET ──
+window.confirmReset=function(){if(confirm('Reset the entire game? Firebase data will also be cleared.'))resetGame();};
+function resetGame(){
+  scores={campo:0,opp:0};fouls={campo:0,opp:0};toLeft={campo:4,opp:4};
+  clockSec=1200;stopClock();vidOffset=null;vidAt=null;log=[];
+  st={campo:{fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0},
+      opp:  {fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0}};
+  ['campo','opp'].forEach(t=>{
+    document.getElementById(t+'Score').textContent='0';
+    document.getElementById(t+'Fouls').textContent='0';
+    document.getElementById(t+'FoulsDisp').textContent='0';
+    renderDots(t);
+  });
+  document.getElementById('logList').innerHTML='';
+  document.getElementById('videoDisplay').textContent='—';
+  document.getElementById('periodSel').selectedIndex=0;
+  period='Half 1';
+  refreshStats();
+  db.ref(GAME).set(null).then(()=>syncDot(true));
+}
+
+renderClk();
+</script>
+</body>
+</html>
