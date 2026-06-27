@@ -336,7 +336,7 @@ function buildTabs(){
 }
 function showTab(n){
   activeTab=n;buildTabs();
-  if(n==='stats') renderStatsPanel();
+  if(n==='stats') setTimeout(renderStatsPanel,50);
   if(n==='roster') renderRoster();
 }
  
@@ -423,7 +423,7 @@ db.ref(GAME+'/state').once('value').then(snap=>{
   });
 });
  
-db.ref(GAME+'/playerTrad').once('value').then(snap=>{const d=snap.val();if(d) Object.keys(d).forEach(id=>{pTrad[id]={...emptyTrad(),...d[id]};});});
+db.ref(GAME+'/playerTrad').on('value').then(snap=>{const d=snap.val();if(d) Object.keys(d).forEach(id=>{pTrad[id]={...emptyTrad(),...d[id]};});});
 db.ref(GAME+'/playerEffort').once('value').then(snap=>{const d=snap.val();if(d) Object.keys(d).forEach(id=>{pEffort[id]={...emptyEffort(),...d[id]};});});
 db.ref(GAME+'/roster').once('value').then(snap=>{
   const d=snap.val();
