@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Campo vs Monte Vista</title>
+<title>Campo vs Monte Vista v2</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Inter:wght@400;500;600&family=Roboto+Mono:wght@500&display=swap');
-:root {
+:root{
   --campo:#C8102E;--campo-light:#FFF0F2;--campo-mid:#F5C2CA;
   --opp:#5A6270;--opp-light:#F0F1F3;--opp-mid:#C8CAD0;
   --bg:#EDEEF2;--card:#FFFFFF;--border:#D8DAE0;
@@ -16,94 +16,122 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overflow:hidden;}
 body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;display:flex;flex-direction:column;}
-
+ 
+/* HEADER */
 .hdr{background:var(--campo);color:#fff;padding:6px 12px;display:flex;align-items:center;gap:8px;flex-shrink:0;box-shadow:0 2px 6px rgba(200,16,46,0.35);}
 .hdr-title{flex:1;font-family:'Oswald',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
 .hdr-right{display:flex;align-items:center;gap:6px;}
 .sync-dot{width:8px;height:8px;border-radius:50%;background:#ff4444;flex-shrink:0;transition:background .3s;}
 .sync-dot.ok{background:#44ff88;}
+.view-toggle{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:14px;color:#fff;font-size:.7rem;font-weight:600;padding:3px 10px;cursor:pointer;white-space:nowrap;}
 .hdr select{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);border-radius:14px;color:#fff;font-size:.75rem;font-weight:600;font-family:'Inter',sans-serif;padding:3px 10px;outline:none;appearance:none;-webkit-appearance:none;cursor:pointer;}
 .hdr select option{color:#000;background:#fff;}
-
+ 
+/* SCORE STRIP */
 .score-strip{background:var(--card);border-bottom:1px solid var(--border);padding:5px 12px;display:grid;grid-template-columns:1fr auto 1fr;gap:0 6px;align-items:center;flex-shrink:0;}
-.tc{display:flex;flex-direction:column;gap:0px;}
+.tc{display:flex;flex-direction:column;gap:0;}
 .tc.opp{align-items:flex-end;}
-.tc-school{font-family:'Oswald',sans-serif;font-size:.58rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
-.tc-mascot{font-family:'Oswald',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
+.tc-school{font-family:'Oswald',sans-serif;font-size:.56rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
+.tc-mascot{font-family:'Oswald',sans-serif;font-size:.7rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;}
 .tc.campo .tc-mascot{color:var(--campo);}
-.tc.opp   .tc-mascot{color:var(--opp);}
+.tc.opp .tc-mascot{color:var(--opp);}
 .tc-score{font-family:'Oswald',sans-serif;font-size:1.9rem;font-weight:700;line-height:1;}
 .tc.campo .tc-score{color:var(--campo);}
-.tc.opp   .tc-score{color:var(--opp);}
-.score-adj{display:flex;gap:3px;margin-top:2px;}
-.adj-btn{background:var(--bg);border:1px solid var(--border);border-radius:5px;font-size:.58rem;font-weight:700;padding:1px 7px;cursor:pointer;color:var(--text);font-family:'Inter',sans-serif;user-select:none;-webkit-user-select:none;transition:transform .1s,opacity .1s;}
-.adj-btn.pressed{transform:scale(.88);opacity:.65;}
+.tc.opp .tc-score{color:var(--opp);}
+.score-adj{display:flex;gap:3px;margin-top:1px;}
+.adj-btn{background:var(--bg);border:1px solid var(--border);border-radius:5px;font-size:.58rem;font-weight:700;padding:1px 7px;cursor:pointer;color:var(--text);user-select:none;transition:transform .1s,opacity .1s;}
 .adj-btn.minus{color:var(--muted);}
-.to-dots{display:flex;gap:3px;margin-top:2px;}
-.tc.opp .to-dots{flex-direction:row-reverse;}
-.dot{width:7px;height:7px;border-radius:50%;cursor:pointer;}
-.tc.campo .dot{background:var(--campo);}
-.tc.opp   .dot{background:var(--opp);}
-.dot.used{background:var(--border)!important;}
-.fl{font-size:.56rem;color:var(--muted);}
-.fv{font-family:'Oswald',sans-serif;font-size:.78rem;color:#b85000;font-weight:700;}
+.adj-btn.pressed,.cb.pressed,.bb.pressed,.sbt.pressed,.mb.pressed{transform:scale(.9);opacity:.7;}
 .cc{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .clk{font-family:'Roboto Mono',monospace;font-size:1.15rem;font-weight:500;color:var(--text);letter-spacing:1px;}
 .clk.run{color:#1a7a40;}
 .clk-btns{display:flex;gap:3px;}
-.cb{background:var(--bg);border:1px solid var(--border);border-radius:5px;font-size:.58rem;font-weight:600;padding:2px 7px;cursor:pointer;color:var(--text);}
+.cb{background:var(--bg);border:1px solid var(--border);border-radius:5px;font-size:.58rem;font-weight:600;padding:2px 7px;cursor:pointer;color:var(--text);transition:transform .1s,opacity .1s;}
 .cb.go{color:#1a7a40;border-color:#1a7a4055;}
 .cb.stop{color:var(--campo);border-color:rgba(200,16,46,.3);}
-
-.opp-bar{background:var(--card);border-bottom:1px solid var(--border);padding:3px 10px;display:flex;align-items:center;gap:5px;flex-shrink:0;}
-.opp-bar label{font-size:.58rem;color:var(--muted);white-space:nowrap;}
-.opp-bar input{background:transparent;border:none;font-family:'Oswald',sans-serif;font-size:.75rem;font-weight:500;color:var(--opp);letter-spacing:.06em;text-transform:uppercase;outline:none;min-width:0;}
-.opp-bar .sep{color:var(--border);font-size:.7rem;}
-
+ 
+/* TABS */
 .tabs{display:flex;background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0;}
 .tab{flex:1;padding:6px 0;text-align:center;font-size:.72rem;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;}
 .tab.active{color:var(--campo);border-bottom-color:var(--campo);}
-
-.panel{display:none;flex:1;overflow-y:auto;overflow-x:hidden;}
+ 
+/* PANELS */
+.panel{display:none;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
 .panel.active{display:flex;flex-direction:column;}
-
-#panel-scoring{padding:5px;gap:4px;}
+ 
+/* SHARED BTN */
+.bb{border:none;border-radius:8px;font-family:'Oswald',sans-serif;font-weight:700;cursor:pointer;padding:9px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 5px rgba(0,0,0,.13);user-select:none;-webkit-user-select:none;transition:transform .1s,opacity .1s;}
+.bb .t{font-size:1.15rem;line-height:1;}
+.bb .b{font-size:.56rem;letter-spacing:.06em;opacity:.85;margin-top:1px;}
+.mb{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 2px;font-size:.6rem;font-family:'Inter',sans-serif;font-weight:600;color:var(--text);cursor:pointer;text-align:center;user-select:none;transition:transform .1s,opacity .1s;}
+.mb.r{color:var(--campo);background:var(--campo-light);border-color:var(--campo-mid);}
+.mb.o{color:var(--opp);background:var(--opp-light);border-color:var(--opp-mid);}
+ 
+/* IPHONE SCORING */
+.iphone-view #panel-scoring{padding:5px;gap:4px;}
 .tsec{background:var(--card);border-radius:10px;box-shadow:var(--sh);overflow:hidden;flex-shrink:0;}
 .tsec-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 10px;border-bottom:1px solid var(--border);}
 .tsec-label{display:flex;flex-direction:column;}
 .tsec-school{font-family:'Oswald',sans-serif;font-size:.55rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);}
 .tsec-mascot{font-family:'Oswald',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
 .tsec.campo .tsec-mascot{color:var(--campo);}
-.tsec.opp   .tsec-mascot{color:var(--opp);}
+.tsec.opp .tsec-mascot{color:var(--opp);}
 .fr{display:flex;align-items:center;gap:4px;font-size:.62rem;color:var(--muted);}
 .fc{font-family:'Oswald',sans-serif;font-size:.85rem;color:#b85000;font-weight:700;min-width:12px;text-align:center;}
 .fb{background:#FFF3EE;border:1px solid #F0C0A0;border-radius:4px;padding:1px 6px;font-size:.58rem;font-weight:600;color:#b85000;cursor:pointer;}
-
 .bgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;padding:5px;}
-.bb{border:none;border-radius:8px;font-family:'Oswald',sans-serif;font-weight:700;cursor:pointer;padding:9px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 2px 5px rgba(0,0,0,.13);user-select:none;-webkit-user-select:none;transition:transform .1s,opacity .1s;}
-.bb.pressed{transform:scale(.91);opacity:.7;}
-.bb .t{font-size:1.15rem;line-height:1;}
-.bb .b{font-size:.56rem;letter-spacing:.06em;opacity:.85;margin-top:1px;}
-.tsec.campo .bm{background:var(--campo);color:#fff;}
-.tsec.campo .bmiss{background:var(--campo-light);color:var(--campo);border:1px solid var(--campo-mid);box-shadow:none;}
-.tsec.campo .bft{background:#FFF3C0;color:#8B6000;border:1px solid #E0C060;box-shadow:none;}
-.tsec.opp .bm{background:var(--opp);color:#fff;}
-.tsec.opp .bmiss{background:var(--opp-light);color:var(--opp);border:1px solid var(--opp-mid);box-shadow:none;}
-.tsec.opp .bft{background:#FFF3C0;color:#8B6000;border:1px solid #E0C060;box-shadow:none;}
-
+.bb.campo-make{background:var(--campo);color:#fff;}
+.bb.campo-miss{background:var(--campo-light);color:var(--campo);border:1px solid var(--campo-mid);box-shadow:none;}
+.bb.campo-ft{background:#FFF3C0;color:#8B6000;border:1px solid #E0C060;box-shadow:none;}
+.bb.opp-make{background:var(--opp);color:#fff;}
+.bb.opp-miss{background:var(--opp-light);color:var(--opp);border:1px solid var(--opp-mid);box-shadow:none;}
+.bb.opp-ft{background:#FFF3C0;color:#8B6000;border:1px solid #E0C060;box-shadow:none;}
 .mrow{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;padding:0 5px 5px;}
-.mb{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 2px;font-size:.6rem;font-family:'Inter',sans-serif;font-weight:600;color:var(--text);cursor:pointer;text-align:center;user-select:none;-webkit-user-select:none;transition:transform .1s,opacity .1s;}
-.mb.pressed{transform:scale(.91);opacity:.7;}
-.mb.r{color:var(--campo);background:var(--campo-light);border-color:var(--campo-mid);}
-.mb.o{color:var(--opp);background:var(--opp-light);border-color:var(--opp-mid);}
-
-.cnrow{display:flex;gap:5px;padding:0 5px;flex-shrink:0;}
-.cnrow input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-size:.72rem;font-family:'Inter',sans-serif;color:var(--text);outline:none;box-shadow:var(--sh);}
-.cnrow input:focus{border-color:rgba(200,16,46,.4);}
+.cnrow{display:flex;gap:5px;flex-shrink:0;padding:0 5px;}
+.cnrow input{flex:1;background:var(--card);border:1px solid var(--border);border-radius:7px;padding:5px 10px;font-size:.72rem;font-family:'Inter',sans-serif;color:var(--text);outline:none;}
 .cnrow button{background:var(--campo);color:#fff;border:none;border-radius:7px;padding:5px 12px;font-size:.7rem;font-weight:600;cursor:pointer;}
-
+ 
+/* IPAD SCORING */
+.ipad-view #panel-scoring{padding:0;}
+.section-label{font-size:.62rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:5px 10px 3px;background:var(--bg);border-bottom:0.5px solid var(--border);flex-shrink:0;}
+.player-block{background:var(--card);border-bottom:1px solid var(--border);flex-shrink:0;}
+.player-header{display:flex;align-items:center;gap:6px;padding:4px 8px;border-bottom:0.5px solid rgba(0,0,0,.05);}
+.player-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--campo);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .15s;user-select:none;}
+.player-check.active{background:var(--campo);}
+.player-check.active::after{content:'✓';color:#fff;font-size:.65rem;font-weight:700;}
+.player-info{min-width:80px;flex-shrink:0;}
+.player-num{font-family:'Oswald',sans-serif;font-size:.6rem;color:var(--muted);line-height:1;}
+.player-name{font-family:'Oswald',sans-serif;font-size:.78rem;font-weight:700;color:var(--campo);line-height:1.1;}
+.stat-row-buttons{display:flex;align-items:center;gap:4px;padding:3px 8px;}
+.row-label{font-size:.52rem;color:var(--muted);font-weight:600;letter-spacing:.06em;text-transform:uppercase;min-width:28px;flex-shrink:0;}
+.btn-strip{display:flex;gap:3px;flex:1;}
+.sbt{border:none;border-radius:5px;font-family:'Inter',sans-serif;font-weight:600;cursor:pointer;padding:6px 4px;font-size:.58rem;text-align:center;user-select:none;-webkit-user-select:none;transition:transform .1s,opacity .1s;white-space:nowrap;flex:1;}
+.sbt.make{background:var(--campo);color:#fff;}
+.sbt.miss{background:var(--campo-light);color:var(--campo);border:1px solid var(--campo-mid);}
+.sbt.ft{background:#FFF3C0;color:#8B6000;border:1px solid #E0C060;}
+.sbt.eff-g{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7;}
+.sbt.eff-b{background:#FFEBEE;color:#C62828;border:1px solid #FFCDD2;}
+.sbt.opp-make{background:var(--opp);color:#fff;}
+.sbt.opp-misc{background:var(--opp-light);color:var(--opp);border:1px solid var(--opp-mid);}
+.sbt.opp-ft{background:#FFF3C0;color:#8B6000;border:1px solid #E0C060;}
+.bench-row{display:flex;align-items:center;gap:6px;padding:5px 8px;border-bottom:0.5px solid var(--border);opacity:.45;flex-shrink:0;}
+.bench-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border);cursor:pointer;flex-shrink:0;}
+.opp-section{background:var(--opp-light);border-top:1px solid var(--opp-mid);border-bottom:1px solid var(--opp-mid);flex-shrink:0;}
+.opp-section-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 10px;border-bottom:0.5px solid var(--opp-mid);}
+.opp-section-name{font-family:'Oswald',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--opp);}
+.opp-stat-row{display:flex;align-items:center;gap:4px;padding:5px 8px;}
+ 
+/* CONFIRM POPUP */
+.confirm-popup{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:999;display:flex;align-items:center;justify-content:center;}
+.confirm-box{background:#fff;border-radius:12px;padding:16px 20px;min-width:200px;text-align:center;}
+.confirm-box p{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:12px;}
+.confirm-btns{display:flex;gap:8px;justify-content:center;}
+.confirm-yes{background:var(--campo);color:#fff;border:none;border-radius:7px;padding:7px 20px;font-size:.8rem;font-weight:600;cursor:pointer;}
+.confirm-no{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:7px 20px;font-size:.8rem;font-weight:600;cursor:pointer;color:var(--muted);}
+ 
+/* ── IPHONE STATS (v3 style) ── */
 #panel-stats{padding:8px;gap:6px;}
-.stat-card{background:var(--card);border-radius:10px;box-shadow:var(--sh);overflow:hidden;}
+.stat-card{background:var(--card);border-radius:10px;box-shadow:var(--sh);overflow:hidden;flex-shrink:0;}
 .stat-card-hdr{display:grid;grid-template-columns:1fr 1fr 1fr;padding:5px 10px;border-bottom:1px solid var(--border);font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;}
 .s-campo{color:var(--campo);}
 .s-opp{color:var(--opp);text-align:right;}
@@ -115,39 +143,84 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;displ
 .stat-val.o{color:var(--opp);text-align:right;}
 .stat-lbl{font-size:.62rem;color:var(--muted);text-align:center;}
 .stat-pct{font-size:.58rem;color:var(--muted);display:block;}
-
+ 
+/* ── IPAD STATS ── */
+.stat-section-title{font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:4px 0 4px;flex-shrink:0;}
+.stat-table-wrap{background:var(--card);border-radius:10px;box-shadow:var(--sh);width:100%;margin-bottom:8px;flex-shrink:0;}
+.stat-table-header{display:grid;padding:4px 8px;border-bottom:1px solid var(--border);gap:2px;background:var(--bg);border-radius:10px 10px 0 0;position:sticky;top:0;z-index:10;}
+.stat-table-header.trad{grid-template-columns:88px 52px repeat(9,1fr);}
+.stat-table-header.effort{grid-template-columns:88px repeat(8,1fr);}
+.stat-table-header.opp-hdr{grid-template-columns:140px repeat(8,1fr);}
+.stat-table-body{overflow:hidden;border-radius:0 0 10px 10px;}
+.sth{font-size:.56rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);text-align:center;}
+.sth.name{text-align:left;color:var(--campo);}
+.sth.opp-name{text-align:left;color:var(--opp);}
+.stat-data-row{display:grid;padding:4px 8px;border-bottom:0.5px solid var(--border);gap:2px;align-items:center;}
+.stat-data-row:last-child{border-bottom:none;}
+.stat-data-row.trad{grid-template-columns:88px 52px repeat(9,1fr);}
+.stat-data-row.effort{grid-template-columns:88px repeat(8,1fr);}
+.stat-data-row.opp-row{grid-template-columns:140px repeat(8,1fr);}
+.stat-data-row.totals{background:#F8F0F0;}
+.stat-data-row.opp-totals{background:#F0F1F3;}
+.spn{font-size:.7rem;font-weight:600;color:var(--text);}
+.spn .num{font-size:.58rem;color:var(--muted);}
+.spv{font-family:'Oswald',sans-serif;font-size:.8rem;font-weight:700;color:var(--campo);text-align:center;}
+.spv.opp{color:var(--opp);}
+.spv.zero{color:var(--border);}
+.spv.g{color:#2E7D32;}
+.spv.b{color:#C62828;}
+.spct{font-size:.52rem;color:var(--muted);display:block;text-align:center;}
+ 
+/* ROSTER */
+#panel-roster{padding:8px;gap:6px;}
+.roster-card{background:var(--card);border-radius:10px;box-shadow:var(--sh);overflow:hidden;flex-shrink:0;}
+.roster-item{display:flex;align-items:center;gap:8px;padding:6px 12px;border-bottom:0.5px solid var(--border);}
+.roster-item:last-child{border-bottom:none;}
+.roster-num-input{font-family:'Oswald',sans-serif;font-size:.82rem;font-weight:700;color:var(--campo);width:36px;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:2px 4px;text-align:center;outline:none;}
+.roster-name-input{flex:1;font-size:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:3px 6px;font-family:'Inter',sans-serif;color:var(--text);outline:none;}
+.roster-bench-btn{background:var(--bg);border:1px solid var(--border);border-radius:5px;color:var(--muted);font-size:.65rem;padding:3px 8px;cursor:pointer;white-space:nowrap;}
+.roster-del{background:var(--campo-light);border:1px solid var(--campo-mid);border-radius:5px;color:var(--campo);font-size:.65rem;padding:3px 8px;cursor:pointer;}
+.add-player-row{background:var(--card);border-radius:10px;box-shadow:var(--sh);display:flex;gap:6px;padding:10px;flex-shrink:0;}
+.add-player-row input{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:6px 8px;font-size:.78rem;font-family:'Inter',sans-serif;color:var(--text);outline:none;}
+.add-player-row input.num{width:52px;text-align:center;}
+.add-player-row input.name{flex:1;}
+.add-player-row button{background:var(--campo);color:#fff;border:none;border-radius:7px;padding:6px 14px;font-size:.75rem;font-weight:600;cursor:pointer;}
+ 
+/* LOG */
 #panel-log{padding:8px;gap:6px;}
 .log-controls{display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0;}
 .lc{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-size:.7rem;font-weight:500;cursor:pointer;color:var(--text);box-shadow:var(--sh);}
 .lc.d{color:var(--campo);border-color:var(--campo-mid);}
-.log-list{display:flex;flex-direction:column;gap:5px;}
+.log-list{display:flex;flex-direction:column;gap:5px;flex-shrink:0;}
 .le{background:var(--card);border-radius:8px;padding:7px 10px;box-shadow:0 1px 3px rgba(0,0,0,.07);display:grid;grid-template-columns:auto 1fr auto;gap:5px;align-items:start;animation:sd .15s ease;}
 @keyframes sd{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
 .le-dot{width:7px;height:7px;border-radius:50%;margin-top:5px;flex-shrink:0;}
 .le-txt{font-size:.75rem;font-weight:600;line-height:1.3;}
-.le-team{font-size:.6rem;font-weight:500;opacity:.55;display:block;}
+.le-sub{font-size:.6rem;font-weight:500;opacity:.55;display:block;}
 .le-score{font-family:'Oswald',sans-serif;font-size:.65rem;color:var(--muted);display:block;margin-top:1px;}
 .le-ts{text-align:right;display:flex;flex-direction:column;gap:1px;}
 .ts-line{font-family:'Roboto Mono',monospace;font-size:.55rem;white-space:nowrap;}
 .tw{color:#5080b0;}.tg{color:#1a7a40;}.tv{color:#b85000;}
-
+ 
+/* SETTINGS */
 #panel-settings{padding:8px;gap:8px;}
 .scard{background:var(--card);border-radius:10px;padding:12px;box-shadow:var(--sh);flex-shrink:0;}
 .scard h3{font-size:.65rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
 .sr{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
 .sr label{font-size:.75rem;color:var(--text);min-width:80px;}
 .sr input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:5px 8px;font-size:.78rem;font-family:'Inter',sans-serif;color:var(--text);outline:none;}
-.sr button{background:var(--campo);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:.72rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+.sr button{background:var(--campo);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:.72rem;font-weight:600;cursor:pointer;}
 .vd{font-size:.68rem;color:var(--muted);}
-.dbtn{width:100%;background:#FFF0F2;border:1px solid var(--campo-mid);border-radius:8px;padding:10px;color:var(--campo);font-size:.78rem;font-weight:600;cursor:pointer;}
+.dbtn{width:100%;background:#FFF0F2;border:1px solid var(--campo-mid);border-radius:8px;padding:10px;color:var(--campo);font-size:.78rem;font-weight:600;cursor:pointer;margin-top:4px;}
 </style>
 </head>
 <body>
-
+ 
 <div class="hdr">
-  <div class="hdr-title">🐾 Cougars vs Mustangs</div>
+  <div class="hdr-title">🐾 Cougars vs Monte Vista</div>
   <div class="hdr-right">
-    <div class="sync-dot" id="syncDot" title="Firebase sync status"></div>
+    <div class="sync-dot" id="syncDot"></div>
+    <button class="view-toggle" id="viewToggleBtn" onclick="toggleView()">📲 iPad view</button>
     <select id="periodSel" onchange="changePeriod()">
       <option value="Half 1">Half 1</option>
       <option value="Half 2">Half 2</option>
@@ -155,7 +228,7 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;displ
     </select>
   </div>
 </div>
-
+ 
 <div class="score-strip">
   <div class="tc campo">
     <div class="tc-school">Campolindo</div>
@@ -165,11 +238,6 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;displ
       <button class="adj-btn minus" onclick="scoreAdj('campo',-1)">−1</button>
       <button class="adj-btn" onclick="scoreAdj('campo',1)">+1</button>
     </div>
-    <div class="to-dots" id="campoToDots">
-      <div class="dot" id="cto0"></div><div class="dot" id="cto1"></div>
-      <div class="dot" id="cto2"></div><div class="dot" id="cto3"></div>
-    </div>
-    <div class="fl">Fouls: <span class="fv" id="campoFoulsDisp">0</span></div>
   </div>
   <div class="cc">
     <div class="clk" id="gameClock">20:00</div>
@@ -179,115 +247,28 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;displ
     </div>
   </div>
   <div class="tc opp">
-    <div class="tc-school" id="oppSchoolDisp">Monte Vista</div>
-    <div class="tc-mascot" id="oppMascotDisp">Mustangs</div>
+    <div class="tc-school">Monte Vista</div>
+    <div class="tc-mascot">Placeholder</div>
     <div class="tc-score" id="oppScore">0</div>
     <div class="score-adj" style="justify-content:flex-end;">
       <button class="adj-btn minus" onclick="scoreAdj('opp',-1)">−1</button>
       <button class="adj-btn" onclick="scoreAdj('opp',1)">+1</button>
     </div>
-    <div class="to-dots" id="oppToDots">
-      <div class="dot" id="oto0"></div><div class="dot" id="oto1"></div>
-      <div class="dot" id="oto2"></div><div class="dot" id="oto3"></div>
-    </div>
-    <div class="fl" style="text-align:right">Fouls: <span class="fv" id="oppFoulsDisp">0</span></div>
   </div>
 </div>
-
-<div class="opp-bar">
-  <label>✏️</label>
-  <input type="text" id="oppSchoolInput" value="Monte Vista" oninput="updateOppNames()" maxlength="20" style="flex:2;">
-  <span class="sep">|</span>
-  <input type="text" id="oppMascotInput" value="Mustangs" oninput="updateOppNames()" maxlength="14" style="flex:1;">
-</div>
-
-<div class="tabs">
-  <div class="tab active" onclick="showTab('scoring')">Scoring</div>
-  <div class="tab" onclick="showTab('stats')">Stats</div>
-  <div class="tab" onclick="showTab('log')">Log</div>
-  <div class="tab" onclick="showTab('settings')">Settings</div>
-</div>
-
-<div class="panel active" id="panel-scoring">
-  <div class="tsec campo">
-    <div class="tsec-hdr">
-      <div class="tsec-label">
-        <div class="tsec-school">Campolindo</div>
-        <div class="tsec-mascot">Cougars</div>
-      </div>
-      <div class="fr">Fouls <span class="fc" id="campoFouls">0</span>
-        <button class="fb" onclick="addFoul('campo',1)">+F</button>
-        <button class="fb" onclick="addFoul('campo',-1)">−F</button>
-      </div>
-    </div>
-    <div class="bgrid">
-      <button class="bb bm" onclick="logPlay('campo','2-pt Make',2)"><span class="t">+2</span><span class="b">PT FG</span></button>
-      <button class="bb bft" onclick="logPlay('campo','Free Throw',1)"><span class="t" style="font-size:.9rem">Free</span><span class="b">Throw</span></button>
-      <button class="bb bm" onclick="logPlay('campo','3-pt Make',3)"><span class="t">+3</span><span class="b">PT FG</span></button>
-      <button class="bb bmiss" onclick="logPlay('campo','2-pt Miss',0)"><span class="t" style="font-size:.9rem">2PT</span><span class="b">Miss</span></button>
-      <div></div>
-      <button class="bb bmiss" onclick="logPlay('campo','3-pt Miss',0)"><span class="t" style="font-size:.9rem">3PT</span><span class="b">Miss</span></button>
-    </div>
-    <div class="mrow">
-      <button class="mb r" onclick="logPlay('campo','Rebound',0)">REB</button>
-      <button class="mb r" onclick="logPlay('campo','Steal',0)">STL</button>
-      <button class="mb r" onclick="logPlay('campo','Block',0)">BLK</button>
-      <button class="mb" onclick="logPlay('campo','Turnover',0)">TO</button>
-      <button class="mb" onclick="addFoul('campo',1);logPlay('campo','Foul',0)">Foul</button>
-    </div>
-  </div>
-
-  <div class="tsec opp">
-    <div class="tsec-hdr">
-      <div class="tsec-label">
-        <div class="tsec-school" id="oppSectionSchool">Monte Vista</div>
-        <div class="tsec-mascot" id="oppSectionMascot">Mustangs</div>
-      </div>
-      <div class="fr">Fouls <span class="fc" id="oppFouls">0</span>
-        <button class="fb" onclick="addFoul('opp',1)">+F</button>
-        <button class="fb" onclick="addFoul('opp',-1)">−F</button>
-      </div>
-    </div>
-    <div class="bgrid">
-      <button class="bb bm" onclick="logPlay('opp','2-pt Make',2)"><span class="t">+2</span><span class="b">PT FG</span></button>
-      <button class="bb bft" onclick="logPlay('opp','Free Throw',1)"><span class="t" style="font-size:.9rem">Free</span><span class="b">Throw</span></button>
-      <button class="bb bm" onclick="logPlay('opp','3-pt Make',3)"><span class="t">+3</span><span class="b">PT FG</span></button>
-      <button class="bb bmiss" onclick="logPlay('opp','2-pt Miss',0)"><span class="t" style="font-size:.9rem">2PT</span><span class="b">Miss</span></button>
-      <div></div>
-      <button class="bb bmiss" onclick="logPlay('opp','3-pt Miss',0)"><span class="t" style="font-size:.9rem">3PT</span><span class="b">Miss</span></button>
-    </div>
-    <div class="mrow">
-      <button class="mb o" onclick="logPlay('opp','Rebound',0)">REB</button>
-      <button class="mb o" onclick="logPlay('opp','Steal',0)">STL</button>
-      <button class="mb o" onclick="logPlay('opp','Block',0)">BLK</button>
-      <button class="mb" onclick="logPlay('opp','Turnover',0)">TO</button>
-      <button class="mb" onclick="addFoul('opp',1);logPlay('opp','Foul',0)">Foul</button>
-    </div>
-  </div>
-
-  <div class="cnrow">
-    <input type="text" id="customNote" placeholder="Custom note…">
-    <button onclick="logCustom()">Log</button>
+ 
+<div class="tabs" id="tabBar"></div>
+ 
+<div class="panel active" id="panel-scoring"></div>
+<div class="panel" id="panel-stats"></div>
+<div class="panel" id="panel-roster">
+  <div class="roster-card" id="rosterList"></div>
+  <div class="add-player-row">
+    <input type="text" class="num" id="newNum" placeholder="#" maxlength="3">
+    <input type="text" class="name" id="newName" placeholder="Player name">
+    <button onclick="addPlayer()">+ Add</button>
   </div>
 </div>
-
-<div class="panel" id="panel-stats">
-  <div class="stat-card">
-    <div class="stat-card-hdr">
-      <div class="s-campo">CAMPO</div><div class="s-label">STAT</div><div class="s-opp" id="statsOppLabel">MC</div>
-    </div>
-    <div class="stat-row"><div class="stat-val c"><span id="s-c-2m">0</span>/<span id="s-c-2a">0</span><span class="stat-pct" id="s-c-2pct">--%</span></div><div class="stat-lbl">2PT FG</div><div class="stat-val o"><span id="s-o-2m">0</span>/<span id="s-o-2a">0</span><span class="stat-pct" id="s-o-2pct">--%</span></div></div>
-    <div class="stat-row"><div class="stat-val c"><span id="s-c-3m">0</span>/<span id="s-c-3a">0</span><span class="stat-pct" id="s-c-3pct">--%</span></div><div class="stat-lbl">3PT FG</div><div class="stat-val o"><span id="s-o-3m">0</span>/<span id="s-o-3a">0</span><span class="stat-pct" id="s-o-3pct">--%</span></div></div>
-    <div class="stat-row"><div class="stat-val c"><span id="s-c-ftm">0</span>/<span id="s-c-fta">0</span><span class="stat-pct" id="s-c-ftpct">--%</span></div><div class="stat-lbl">Free Throws</div><div class="stat-val o"><span id="s-o-ftm">0</span>/<span id="s-o-fta">0</span><span class="stat-pct" id="s-o-ftpct">--%</span></div></div>
-    <div class="stat-row"><div class="stat-val c" id="s-c-reb">0</div><div class="stat-lbl">Rebounds</div><div class="stat-val o" id="s-o-reb">0</div></div>
-    <div class="stat-row"><div class="stat-val c" id="s-c-stl">0</div><div class="stat-lbl">Steals</div><div class="stat-val o" id="s-o-stl">0</div></div>
-    <div class="stat-row"><div class="stat-val c" id="s-c-blk">0</div><div class="stat-lbl">Blocks</div><div class="stat-val o" id="s-o-blk">0</div></div>
-    <div class="stat-row"><div class="stat-val c" id="s-c-to">0</div><div class="stat-lbl">Turnovers</div><div class="stat-val o" id="s-o-to">0</div></div>
-    <div class="stat-row"><div class="stat-val c" id="s-c-foul">0</div><div class="stat-lbl">Fouls</div><div class="stat-val o" id="s-o-foul">0</div></div>
-    <div class="stat-row"><div class="stat-val c" id="s-c-pts">0</div><div class="stat-lbl">Points</div><div class="stat-val o" id="s-o-pts">0</div></div>
-  </div>
-</div>
-
 <div class="panel" id="panel-log">
   <div class="log-controls">
     <button class="lc" onclick="undoLast()">↩ Undo</button>
@@ -297,7 +278,6 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;displ
   </div>
   <div class="log-list" id="logList"></div>
 </div>
-
 <div class="panel" id="panel-settings">
   <div class="scard">
     <h3>Clock</h3>
@@ -308,126 +288,217 @@ body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;displ
     <div class="sr"><label>Video time</label><input type="text" id="videoInput" placeholder="0:00 or 1:23:45"><button onclick="syncVideo()">Sync</button></div>
     <div class="vd">Current: <span id="videoDisplay" style="font-family:'Roboto Mono',monospace;color:#b85000">—</span></div>
   </div>
-  <div class="scard">
-    <h3>Timeouts</h3>
-    <div class="sr"><label>Campo left</label><input type="number" id="campoTOSet" value="4" min="0" max="9"><button onclick="setTimeouts('campo')">Set</button></div>
-    <div class="sr"><label>Opp left</label><input type="number" id="oppTOSet" value="4" min="0" max="9"><button onclick="setTimeouts('opp')">Set</button></div>
-  </div>
   <button class="dbtn" onclick="confirmReset()">🗑 Reset Entire Game</button>
 </div>
-
-<!-- Firebase compat SDKs (Safari-safe) -->
+ 
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyD07zLJ7LIIRYzVU-8NSNbWi7Xpdk6Nokw",
-  authDomain: "campo-summerfbb.firebaseapp.com",
-  databaseURL: "https://campo-summerfbb-default-rtdb.firebaseio.com",
-  projectId: "campo-summerfbb",
-  storageBucket: "campo-summerfbb.firebasestorage.app",
-  messagingSenderId: "377034371618",
-  appId: "1:377034371618:web:7773ab84b636fcb14e107b"
-};
-
-firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
-const GAME = 'games/monte-vista';
-
-// ── STATE ──
-let scores={campo:0,opp:0},fouls={campo:0,opp:0},toLeft={campo:4,opp:4};
-let clockSec=1200,running=false,tick=null,period='Half 1';
-let vidOffset=null,vidAt=null,log=[];
-let st={
-  campo:{fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0},
-  opp:  {fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0}
-};
-let fbReady=false;
-
-// ── FIREBASE SYNC ──
-function syncDot(ok){
-  const d=document.getElementById('syncDot');
-  d.classList.toggle('ok',ok);
-}
-
-function saveState(){
-  if(!fbReady)return;
-  db.ref(GAME+'/state').set({scores,fouls,toLeft,clockSec,period,st}).then(()=>syncDot(true)).catch(()=>syncDot(false));
-}
-
-function saveLogEntry(entry){
-  if(!fbReady)return;
-  db.ref(GAME+'/log').push(entry).catch(()=>syncDot(false));
-}
-
-// Load state from Firebase on open
-db.ref(GAME+'/state').once('value').then((snap)=>{
-  fbReady=true;syncDot(true);
-  const d=snap.val();
-  if(!d)return;
-  scores=d.scores||scores;
-  fouls=d.fouls||fouls;
-  toLeft=d.toLeft||toLeft;
-  clockSec=d.clockSec||clockSec;
-  period=d.period||period;
-  st=d.st||st;
-  // update period selector
-  const opts=['Half 1','Half 2','OT'];
-  document.getElementById('periodSel').selectedIndex=opts.indexOf(period);
-  // render
-  ['campo','opp'].forEach(t=>{
-    document.getElementById(t+'Score').textContent=scores[t];
-    document.getElementById(t+'Fouls').textContent=fouls[t];
-    document.getElementById(t+'FoulsDisp').textContent=fouls[t];
-    renderDots(t);
-  });
-  renderClk();
-  refreshStats();
+firebase.initializeApp({
+  apiKey:"AIzaSyD07zLJ7LIIRYzVU-8NSNbWi7Xpdk6Nokw",
+  authDomain:"campo-summerfbb.firebaseapp.com",
+  databaseURL:"https://campo-summerfbb-default-rtdb.firebaseio.com",
+  projectId:"campo-summerfbb",
+  storageBucket:"campo-summerfbb.firebasestorage.app",
+  messagingSenderId:"377034371618",
+  appId:"1:377034371618:web:7773ab84b636fcb14e107b"
 });
-
-// Load log from Firebase on open
-db.ref(GAME+'/log').once('value').then((snap)=>{
-  const d=snap.val();
-  if(!d)return;
-  log=[];
-  document.getElementById('logList').innerHTML='';
-  // entries come in chronological order, render oldest first then newest on top
-  const entries=Object.values(d);
-  entries.sort((a,b)=>a.ts-b.ts);
-  entries.forEach(e=>{log.unshift(e);renderEntry(e);});
-});
-
+const db=firebase.database();
+const GAME='games/montevista';
+ 
+// ── VIEW ──
+let isIPad=window.innerWidth>=768;
+function applyView(){
+  document.body.className=isIPad?'ipad-view':'iphone-view';
+  document.getElementById('viewToggleBtn').textContent=isIPad?'📱 Phone view':'📲 iPad view';
+  buildTabs();
+  renderScoringPanel();
+  if(isIPad) renderRoster();
+}
+function toggleView(){isIPad=!isIPad;applyView();}
+ 
 // ── TABS ──
-window.showTab=function(n){
-  const names=['scoring','stats','log','settings'];
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',names[i]===n));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+n).classList.add('active');
-};
-
-// ── BUTTON FEEDBACK ──
-document.addEventListener('DOMContentLoaded',()=>{
-  document.querySelectorAll('.bb,.mb,.fb,.cb,.adj-btn,.lc,.cnrow button').forEach(btn=>{
-    btn.addEventListener('touchstart',()=>{btn.classList.add('pressed');setTimeout(()=>btn.classList.remove('pressed'),180);},{passive:true});
+let activeTab='scoring';
+function buildTabs(){
+  const bar=document.getElementById('tabBar');bar.innerHTML='';
+  const tabs=isIPad?['scoring','stats','roster','log','settings']:['scoring','stats','log','settings'];
+  const labels=isIPad?['Scoring','Stats','Roster','Log','Settings']:['Scoring','Stats','Log','Settings'];
+  tabs.forEach((t,i)=>{
+    const el=document.createElement('div');
+    el.className='tab'+(t===activeTab?' active':'');
+    el.textContent=labels[i];
+    el.onclick=()=>showTab(t);
+    bar.appendChild(el);
   });
-  document.getElementById('customNote').addEventListener('keydown',e=>{if(e.key==='Enter')logCustom();});
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  const ap=document.getElementById('panel-'+activeTab);
+  if(ap) ap.classList.add('active');
+}
+function showTab(n){
+  activeTab=n;buildTabs();
+  if(n==='stats') renderStatsPanel();
+  if(n==='roster') renderRoster();
+}
+ 
+// ── STATE ──
+let scores={campo:0,opp:0},fouls={campo:0,opp:0};
+let clockSec=1200,running=false,tick=null,period='Half 1';
+let vidOffset=null,vidAt=null,gameLog=[];
+function emptyTeamSt(){return{fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0};}
+let teamSt={campo:emptyTeamSt(),opp:emptyTeamSt()};
+ 
+// ── ROSTER ──
+let roster=[
+  {id:'p1', num:'1',  name:'Ren',          active:true, minsPlayed:0,clockInAt:null},
+  {id:'p2', num:'3',  name:'Fwd Jackson',  active:true, minsPlayed:0,clockInAt:null},
+  {id:'p3', num:'4',  name:'Nikita',       active:true, minsPlayed:0,clockInAt:null},
+  {id:'p4', num:'10', name:'Tommy',        active:true, minsPlayed:0,clockInAt:null},
+  {id:'p5', num:'12', name:'Jackson/Nick', active:true, minsPlayed:0,clockInAt:null},
+  {id:'p6', num:'14', name:'Zain',         active:false,minsPlayed:0,clockInAt:null},
+  {id:'p7', num:'15', name:'Andrew',       active:false,minsPlayed:0,clockInAt:null},
+  {id:'p8', num:'2',  name:'Oliver',       active:false,minsPlayed:0,clockInAt:null},
+  {id:'p9', num:'21', name:'Carter',       active:false,minsPlayed:0,clockInAt:null},
+  {id:'p10',num:'22', name:'Christian',    active:false,minsPlayed:0,clockInAt:null},
+  {id:'p11',num:'24', name:'Maxwell',      active:false,minsPlayed:0,clockInAt:null},
+  {id:'p12',num:'30', name:'Dalton',       active:false,minsPlayed:0,clockInAt:null},
+  {id:'p13',num:'31', name:'Brenan Kim',   active:false,minsPlayed:0,clockInAt:null},
+  {id:'p14',num:'-',  name:'Tripp',        active:false,minsPlayed:0,clockInAt:null},
+  {id:'p15',num:'-',  name:'Tacuma',       active:false,minsPlayed:0,clockInAt:null},
+  {id:'p16',num:'-',  name:'Sorin',        active:false,minsPlayed:0,clockInAt:null},
+  {id:'p17',num:'5',  name:'Henry',        active:false,minsPlayed:0,clockInAt:null},
+  {id:'p18',num:'-',  name:'Darren',       active:false,minsPlayed:0,clockInAt:null},
+  {id:'p19',num:'-',  name:'Bob',          active:false,minsPlayed:0,clockInAt:null},
+  {id:'p20',num:'33', name:'Thomas',       active:false,minsPlayed:0,clockInAt:null},
+  {id:'p21',num:'-',  name:'Thorne',       active:false,minsPlayed:0,clockInAt:null},
+  {id:'p22',num:'-',  name:'Mike',         active:false,minsPlayed:0,clockInAt:null},
+  {id:'p23',num:'-',  name:'Kyle',         active:false,minsPlayed:0,clockInAt:null},
+  {id:'p24',num:'-',  name:'Danielle',     active:false,minsPlayed:0,clockInAt:null},
+  {id:'p25',num:'-',  name:'Gabrielle',    active:false,minsPlayed:0,clockInAt:null},
+];
+function emptyTrad(){return{fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0};}
+function emptyEffort(){return{gbp:0,bbp:0,gbo:0,bbo:0,gwu:0,bwu:0,ghlp:0,bhlp:0};}
+let pTrad={},pEffort={};
+roster.forEach(p=>{pTrad[p.id]=emptyTrad();pEffort[p.id]=emptyEffort();});
+ 
+// ── SYNC ──
+function syncDot(ok){document.getElementById('syncDot').classList.toggle('ok',ok);}
+ 
+// ── FIREBASE LOAD + LISTENERS ──
+db.ref(GAME+'/state').once('value').then(snap=>{
+  syncDot(true);
+  const d=snap.val();
+  if(d){
+    if(d.scores){scores={...scores,...d.scores};}
+    if(d.fouls){fouls={...fouls,...d.fouls};}
+    if(d.clockSec!==undefined) clockSec=d.clockSec;
+    if(d.period){period=d.period;const opts=['Half 1','Half 2','OT'];const idx=opts.indexOf(period);document.getElementById('periodSel').selectedIndex=idx>=0?idx:0;}
+    if(d.teamSt){teamSt={campo:{...emptyTeamSt(),...(d.teamSt.campo||{})},opp:{...emptyTeamSt(),...(d.teamSt.opp||{})}};}
+    document.getElementById('campoScore').textContent=scores.campo;
+    document.getElementById('oppScore').textContent=scores.opp;
+  }
+  renderClk();
+  initActivePlayers();
+ 
+  // Real-time listeners
+  db.ref(GAME+'/state/scores/campo').on('value',snap=>{if(snap.val()===null)return;const v=snap.val();if(v!==scores.campo){scores.campo=v;document.getElementById('campoScore').textContent=scores.campo;}});
+  db.ref(GAME+'/state/scores/opp').on('value',snap=>{if(snap.val()===null)return;const v=snap.val();if(v!==scores.opp){scores.opp=v;document.getElementById('oppScore').textContent=scores.opp;}});
+  db.ref(GAME+'/state/teamSt').on('value',snap=>{if(!snap.val())return;const d=snap.val();teamSt={campo:{...emptyTeamSt(),...(d.campo||{})},opp:{...emptyTeamSt(),...(d.opp||{})}};});
+ 
+  // ── CLOCK SYNC (Firebase-driven) ──
+  db.ref(GAME+'/state/clockSec').on('value',snap=>{
+    if(snap.val()===null)return;
+    const v=snap.val();
+    if(v!==clockSec){clockSec=v;renderClk();}
+  });
+  db.ref(GAME+'/state/clockRunning').on('value',snap=>{
+    const v=snap.val();
+    if(v===true && !running){
+      running=true;
+      startLocalTick();
+    } else if(v===false && running){
+      running=false;
+      clearInterval(tick);
+      renderClk();
+    }
+  });
 });
-
+ 
+db.ref(GAME+'/playerTrad').once('value').then(snap=>{const d=snap.val();if(d) Object.keys(d).forEach(id=>{pTrad[id]={...emptyTrad(),...d[id]};});});
+db.ref(GAME+'/playerEffort').once('value').then(snap=>{const d=snap.val();if(d) Object.keys(d).forEach(id=>{pEffort[id]={...emptyEffort(),...d[id]};});});
+db.ref(GAME+'/roster').once('value').then(snap=>{
+  const d=snap.val();
+  if(d&&Array.isArray(d)&&d.length>0){
+    roster=d.map(p=>({minsPlayed:0,clockInAt:null,...p}));
+    roster.forEach(p=>{if(!pTrad[p.id])pTrad[p.id]=emptyTrad();if(!pEffort[p.id])pEffort[p.id]=emptyEffort();});
+    initActivePlayers();
+  }
+  renderScoringPanel();renderRoster();
+});
+db.ref(GAME+'/log').once('value').then(snap=>{
+  const d=snap.val();if(!d)return;
+  const entries=Object.values(d);entries.sort((a,b)=>a.ts-b.ts);
+  entries.forEach(e=>{gameLog.unshift(e);renderLogEntry(e);});
+});
+ 
+// ── SAVE FUNCTIONS ──
+function saveScoreCampo(){db.ref(GAME+'/state/scores/campo').set(scores.campo).then(()=>syncDot(true)).catch(()=>syncDot(false));}
+function saveScoreOpp(){db.ref(GAME+'/state/scores/opp').set(scores.opp).then(()=>syncDot(true)).catch(()=>syncDot(false));}
+function saveTeamSt(){db.ref(GAME+'/state/teamSt').set(teamSt).catch(()=>syncDot(false));}
+function saveTrad(){db.ref(GAME+'/playerTrad').set(pTrad).catch(()=>syncDot(false));}
+function saveEffort(){db.ref(GAME+'/playerEffort').set(pEffort).catch(()=>syncDot(false));}
+function saveRoster(){db.ref(GAME+'/roster').set(roster).then(()=>syncDot(true)).catch(()=>syncDot(false));}
+function saveLogEntry(e){db.ref(GAME+'/log').push(e).catch(()=>syncDot(false));}
+ 
 // ── CLOCK ──
 function fmt(s){const m=Math.floor(Math.abs(s)/60),sec=Math.abs(s)%60;return`${m}:${sec.toString().padStart(2,'0')}`;}
+function fmtMins(s){const m=Math.floor(s/60),sec=s%60;return`${m}:${sec.toString().padStart(2,'0')}`;}
+function getCurrentMins(p){if(p.clockInAt===null||p.clockInAt===undefined)return p.minsPlayed||0;return(p.minsPlayed||0)+Math.max(0,(p.clockInAt||0)-(clockSec));}
 function renderClk(){const e=document.getElementById('gameClock');e.textContent=fmt(clockSec);e.className='clk'+(running?' run':'');}
-window.startClock=function(){if(running)return;running=true;tick=setInterval(()=>{if(clockSec>0){clockSec--;renderClk();}else stopClock();},1000);};
-window.stopClock=function(){running=false;clearInterval(tick);renderClk();};
-window.setClock=function(){const p=document.getElementById('clockSetInput').value.trim().split(':');if(p.length===2){clockSec=+p[0]*60+ +p[1];stopClock();saveState();}};
-window.changePeriod=function(){
-  const sel=document.getElementById('periodSel');
-  period=sel.value;
+function updateAllMins(){roster.filter(p=>p.active).forEach(p=>{document.querySelectorAll('[id="mins-'+p.id+'"]').forEach(el=>{el.textContent=fmtMins(getCurrentMins(p));});});}
+function initActivePlayers(){roster.filter(p=>p.active).forEach(p=>{if(p.clockInAt===null||p.clockInAt===undefined)p.clockInAt=clockSec;});}
+ 
+function startLocalTick(){
+  clearInterval(tick);
+  tick=setInterval(()=>{
+    if(clockSec>0){clockSec--;renderClk();updateAllMins();}
+    else{stopClock();}
+  },1000);
+}
+ 
+function startClock(){
+  if(running)return;
+  initActivePlayers();
+  running=true;
+  db.ref(GAME+'/state/clockRunning').set(true);
+  startLocalTick();
+  clearInterval(window._clockSaveInterval);
+  window._clockSaveInterval=setInterval(()=>{if(running)db.ref(GAME+'/state/clockSec').set(clockSec);},5000);
+}
+ 
+function stopClock(){
+  running=false;
+  clearInterval(tick);
+  clearInterval(window._clockSaveInterval);
+  db.ref(GAME+'/state/clockRunning').set(false);
+  db.ref(GAME+'/state/clockSec').set(clockSec);
+  renderClk();
+}
+ 
+function setClock(){
+  const p=document.getElementById('clockSetInput').value.trim().split(':');
+  if(p.length===2){clockSec=+p[0]*60+ +p[1];stopClock();db.ref(GAME+'/state/clockSec').set(clockSec);}
+}
+ 
+function changePeriod(){
+  const opts=['Half 1','Half 2','OT'];
+  period=opts[document.getElementById('periodSel').selectedIndex];
   clockSec=period==='OT'?300:1200;
   stopClock();
-  addEntry('neutral',period+' Started');
-  saveState();
-};
-
+  db.ref(GAME+'/state/period').set(period);
+  db.ref(GAME+'/state/clockSec').set(clockSec);
+  addEntry('neutral',period+' Started','—');
+}
+ 
 // ── VIDEO ──
 function wallNow(){return new Date().toLocaleTimeString();}
 function gameNow(){return fmt(clockSec);}
@@ -437,180 +508,423 @@ function vidNow(){
   const h=Math.floor(t/3600),m=Math.floor((t%3600)/60),s=t%60;
   return h?`${h}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`:`${m}:${s.toString().padStart(2,'0')}`;
 }
-window.syncVideo=function(){
+function syncVideo(){
   const p=document.getElementById('videoInput').value.trim().split(':').map(Number);
   if(p.length===2)vidOffset=p[0]*60+p[1];
   else if(p.length===3)vidOffset=p[0]*3600+p[1]*60+p[2];
-  else return;
-  vidAt=Date.now();
-};
+  else return;vidAt=Date.now();
+}
 setInterval(()=>document.getElementById('videoDisplay').textContent=vidNow(),500);
-
-// ── OPP NAME ──
-window.updateOppNames=function(){
-  const school=document.getElementById('oppSchoolInput').value.trim()||'Opponent';
-  const mascot=document.getElementById('oppMascotInput').value.trim()||'Team';
-  document.getElementById('oppSchoolDisp').textContent=school;
-  document.getElementById('oppMascotDisp').textContent=mascot;
-  document.getElementById('oppSectionSchool').textContent=school;
-  document.getElementById('oppSectionMascot').textContent=mascot;
-  document.getElementById('statsOppLabel').textContent=school.slice(0,6).toUpperCase();
-};
-
-// ── SCORE / FOULS ──
-function adjustScore(t,d){scores[t]=Math.max(0,scores[t]+d);document.getElementById(t+'Score').textContent=scores[t];refreshStats();}
-window.addFoul=function(t,d){fouls[t]=Math.max(0,fouls[t]+d);document.getElementById(t+'Fouls').textContent=fouls[t];document.getElementById(t+'FoulsDisp').textContent=fouls[t];saveState();};
-
-window.scoreAdj=function(team,delta){
-  adjustScore(team,delta);
-  const label=delta>0?'Score +1 (correction)':'Score −1 (correction)';
-  addEntry(team,label);
-  saveState();
-};
-
-// ── TIMEOUTS ──
-window.useTo=function(team){if(toLeft[team]>0){toLeft[team]--;renderDots(team);addEntry(team,'Timeout');saveState();}};
-window.setTimeouts=function(team){const v=+document.getElementById(team+'TOSet').value;if(!isNaN(v)){toLeft[team]=Math.max(0,Math.min(9,v));renderDots(team);saveState();}};
-function renderDots(team){
-  const p=team==='campo'?'c':'o';
-  for(let i=0;i<4;i++){const d=document.getElementById(p+'to'+i);if(d)d.classList.toggle('used',i>=toLeft[team]);}
+ 
+// ── SCORE ADJ ──
+function scoreAdj(team,delta){
+  scores[team]=Math.max(0,scores[team]+delta);
+  document.getElementById(team+'Score').textContent=scores[team];
+  if(team==='campo')saveScoreCampo();else saveScoreOpp();
+  addEntry(team,delta>0?'Score +1 (correction)':'Score −1 (correction)','—');
 }
-
-// ── PLAY LOG ──
-window.logPlay=function(team,event,pts){
-  if(pts>0)adjustScore(team,pts);
-  if(team==='campo'||team==='opp'){
-    const s=st[team];
-    if(event==='2-pt Make'){s.fg2m++;s.fg2a++;}
-    else if(event==='2-pt Miss'){s.fg2a++;}
-    else if(event==='3-pt Make'){s.fg3m++;s.fg3a++;}
-    else if(event==='3-pt Miss'){s.fg3a++;}
-    else if(event==='Free Throw'){s.ftm++;s.fta++;}
-    else if(event==='Rebound'){s.reb++;}
-    else if(event==='Steal'){s.stl++;}
-    else if(event==='Block'){s.blk++;}
-    else if(event==='Turnover'){s.to++;}
-    else if(event==='Foul'){s.foul++;}
-    refreshStats();
-  }
-  addEntry(team,event);
-  saveState();
-};
-
-function addEntry(team,event){
-  const e={team,event,wall:wallNow(),game:gameNow(),vid:vidNow(),period,score:`${scores.campo}–${scores.opp}`,ts:Date.now()};
-  log.unshift(e);
-  renderEntry(e);
-  saveLogEntry(e);
+ 
+// ── FOULS ──
+function addFoul(team,delta){
+  fouls[team]=Math.max(0,fouls[team]+delta);
+  document.querySelectorAll('[id="'+team+'FoulsLive"]').forEach(el=>el.textContent=fouls[team]);
+  db.ref(GAME+'/state/fouls').set(fouls).catch(()=>{});
 }
-
-window.logCustom=function(){
-  const v=document.getElementById('customNote').value.trim();
-  if(!v)return;
-  addEntry('neutral',v);
-  document.getElementById('customNote').value='';
-};
-
-// ── STATS ──
+ 
+// ── RENDER SCORING ──
+function renderScoringPanel(){
+  const panel=document.getElementById('panel-scoring');
+  panel.innerHTML='';
+  if(isIPad) renderIpadScoring(panel);
+  else renderIphoneScoring(panel);
+}
+ 
+// ── IPHONE SCORING ──
+function renderIphoneScoring(panel){
+  panel.style.padding='5px';panel.style.gap='4px';
+  const makeTeamSection=(team,school,mascot,makeCls,missCls,ftCls,miscCls)=>{
+    const sec=document.createElement('div');sec.className='tsec '+team;
+    const hdr=document.createElement('div');hdr.className='tsec-hdr';
+    hdr.innerHTML=`<div class="tsec-label"><div class="tsec-school">${school}</div><div class="tsec-mascot">${mascot}</div></div>
+      <div class="fr">Fouls <span class="fc" id="${team}FoulsLive">${fouls[team]}</span>
+        <button class="fb" onclick="addFoul('${team}',1)">+F</button>
+        <button class="fb" onclick="addFoul('${team}',-1)">−F</button>
+      </div>`;
+    sec.appendChild(hdr);
+    const grid=document.createElement('div');grid.className='bgrid';
+    [{t:'+2',b:'PT FG',cls:makeCls,fn:()=>logTeam(team,'2-pt Make',2)},
+     {t:'Free',b:'Throw',cls:ftCls,fn:()=>logTeam(team,'Free Throw',1)},
+     {t:'+3',b:'PT FG',cls:makeCls,fn:()=>logTeam(team,'3-pt Make',3)},
+     {t:'2PT',b:'Miss',cls:missCls,fn:()=>logTeam(team,'2-pt Miss',0)},
+     null,
+     {t:'3PT',b:'Miss',cls:missCls,fn:()=>logTeam(team,'3-pt Miss',0)},
+    ].forEach(a=>{
+      if(!a){grid.appendChild(document.createElement('div'));return;}
+      const b=document.createElement('button');b.className='bb '+a.cls;
+      b.innerHTML=`<span class="t">${a.t}</span><span class="b">${a.b}</span>`;
+      b.onclick=a.fn;addTouch(b);grid.appendChild(b);
+    });
+    sec.appendChild(grid);
+    const misc=document.createElement('div');misc.className='mrow';
+    [{l:'REB',cls:miscCls,fn:()=>logTeam(team,'Rebound',0)},
+     {l:'STL',cls:miscCls,fn:()=>logTeam(team,'Steal',0)},
+     {l:'BLK',cls:miscCls,fn:()=>logTeam(team,'Block',0)},
+     {l:'TO',cls:'',fn:()=>logTeam(team,'Turnover',0)},
+     {l:'Foul',cls:'',fn:()=>{addFoul(team,1);logTeam(team,'Foul',0);}},
+    ].forEach(a=>{
+      const b=document.createElement('button');b.className='mb '+a.cls;b.textContent=a.l;b.onclick=a.fn;addTouch(b);misc.appendChild(b);
+    });
+    sec.appendChild(misc);
+    return sec;
+  };
+  panel.appendChild(makeTeamSection('campo','Campolindo','Cougars','campo-make','campo-miss','campo-ft','r'));
+  panel.appendChild(makeTeamSection('opp','Monte Vista','Placeholder','opp-make','opp-miss','opp-ft','o'));
+  const cn=document.createElement('div');cn.className='cnrow';
+  cn.innerHTML='<input type="text" id="customNote" placeholder="Custom note…"><button onclick="logCustom()">Log</button>';
+  panel.appendChild(cn);
+  document.getElementById('customNote').addEventListener('keydown',e=>{if(e.key==='Enter')logCustom();});
+}
+ 
+// ── IPAD SCORING ──
+function renderIpadScoring(panel){
+  panel.style.padding='0';
+  const onLabel=document.createElement('div');onLabel.className='section-label';onLabel.textContent='On floor — Campo Cougars';panel.appendChild(onLabel);
+  roster.filter(p=>p.active).forEach(p=>panel.appendChild(makePlayerBlock(p)));
+ 
+  // Opponent section
+  const oppSec=document.createElement('div');oppSec.className='opp-section';
+  const oppHdr=document.createElement('div');oppHdr.className='opp-section-hdr';
+  oppHdr.innerHTML=`<div class="opp-section-name">Monte Vista — Placeholder</div>
+    <div class="fr" style="color:var(--opp)">Fouls <span class="fc" id="oppFoulsLive" style="color:#b85000">${fouls.opp}</span>
+      <button class="fb" onclick="addFoul('opp',1)">+F</button>
+      <button class="fb" onclick="addFoul('opp',-1)">−F</button>
+    </div>`;
+  oppSec.appendChild(oppHdr);
+  const oppRow=document.createElement('div');oppRow.className='opp-stat-row';
+  const oppLabel=document.createElement('div');oppLabel.className='row-label';oppLabel.textContent='OPP';
+  const oppBtns=document.createElement('div');oppBtns.className='btn-strip';
+  [{l:'+2',cls:'opp-make',fn:()=>logTeam('opp','2-pt Make',2)},
+   {l:'2M',cls:'opp-misc',fn:()=>logTeam('opp','2-pt Miss',0)},
+   {l:'+3',cls:'opp-make',fn:()=>logTeam('opp','3-pt Make',3)},
+   {l:'3M',cls:'opp-misc',fn:()=>logTeam('opp','3-pt Miss',0)},
+   {l:'FT',cls:'opp-ft',fn:()=>logTeam('opp','Free Throw',1)},
+   {l:'REB',cls:'opp-misc',fn:()=>logTeam('opp','Rebound',0)},
+   {l:'STL',cls:'opp-misc',fn:()=>logTeam('opp','Steal',0)},
+   {l:'BLK',cls:'opp-misc',fn:()=>logTeam('opp','Block',0)},
+   {l:'TO',cls:'opp-misc',fn:()=>logTeam('opp','Turnover',0)},
+   {l:'Foul',cls:'opp-misc',fn:()=>{addFoul('opp',1);logTeam('opp','Foul',0);}},
+  ].forEach(a=>{
+    const b=document.createElement('button');b.className='sbt '+a.cls;b.textContent=a.l;b.onclick=a.fn;addTouch(b);oppBtns.appendChild(b);
+  });
+  oppRow.appendChild(oppLabel);oppRow.appendChild(oppBtns);oppSec.appendChild(oppRow);panel.appendChild(oppSec);
+ 
+  const benchLabel=document.createElement('div');benchLabel.className='section-label';benchLabel.textContent='Bench';panel.appendChild(benchLabel);
+  roster.filter(p=>!p.active).forEach(p=>panel.appendChild(makeBenchRow(p)));
+}
+ 
+function makePlayerBlock(p){
+  const block=document.createElement('div');block.className='player-block';
+  const hdr=document.createElement('div');hdr.className='player-header';
+  const check=document.createElement('div');check.className='player-check active';check.onclick=()=>toggleActive(p.id);addTouch(check);
+  const info=document.createElement('div');info.className='player-info';
+  info.innerHTML=`<div class="player-num">#${p.num}</div><div class="player-name">${p.name} <span style="font-size:.58rem;font-weight:500;color:rgba(200,16,46,0.6);font-family:'Roboto Mono',monospace;" id="mins-${p.id}">${fmtMins(getCurrentMins(p))}</span></div>`;
+  hdr.appendChild(check);hdr.appendChild(info);block.appendChild(hdr);
+ 
+  const tradRow=document.createElement('div');tradRow.className='stat-row-buttons';
+  const tradLabel=document.createElement('div');tradLabel.className='row-label';tradLabel.textContent='OFF';
+  const tradBtns=document.createElement('div');tradBtns.className='btn-strip';
+  [{l:'+2',cls:'make',key:'2-pt Make',pts:2},{l:'2M',cls:'miss',key:'2-pt Miss',pts:0},
+   {l:'+3',cls:'make',key:'3-pt Make',pts:3},{l:'3M',cls:'miss',key:'3-pt Miss',pts:0},
+   {l:'FT',cls:'ft',key:'Free Throw',pts:1},{l:'REB',cls:'eff-g',key:'Rebound',pts:0},
+   {l:'STL',cls:'eff-g',key:'Steal',pts:0},{l:'BLK',cls:'eff-g',key:'Block',pts:0},
+   {l:'TO',cls:'eff-b',key:'Turnover',pts:0},
+  ].forEach(a=>{
+    const b=document.createElement('button');b.className='sbt '+a.cls;b.textContent=a.l;
+    b.onclick=()=>logTrad(p,a.key,a.pts);
+    b.addEventListener('contextmenu',e=>{e.preventDefault();showSubtractConfirm(p,a.key,'trad');});
+    addLongPress(b,()=>showSubtractConfirm(p,a.key,'trad'));addTouch(b);tradBtns.appendChild(b);
+  });
+  tradRow.appendChild(tradLabel);tradRow.appendChild(tradBtns);block.appendChild(tradRow);
+ 
+  const effRow=document.createElement('div');effRow.className='stat-row-buttons';
+  const effLabel=document.createElement('div');effLabel.className='row-label';effLabel.textContent='DEF';
+  const effBtns=document.createElement('div');effBtns.className='btn-strip';
+  [{l:'GBP',cls:'eff-g',key:'gbp'},{l:'BBP',cls:'eff-b',key:'bbp'},
+   {l:'GBO',cls:'eff-g',key:'gbo'},{l:'BBO',cls:'eff-b',key:'bbo'},
+   {l:'GWU',cls:'eff-g',key:'gwu'},{l:'BWU',cls:'eff-b',key:'bwu'},
+   {l:'GHLP',cls:'eff-g',key:'ghlp'},{l:'BHLP',cls:'eff-b',key:'bhlp'},
+  ].forEach(a=>{
+    const b=document.createElement('button');b.className='sbt '+a.cls;b.textContent=a.l;
+    b.onclick=()=>logEffort(p,a.key);
+    b.addEventListener('contextmenu',e=>{e.preventDefault();showSubtractConfirm(p,a.key,'effort');});
+    addLongPress(b,()=>showSubtractConfirm(p,a.key,'effort'));addTouch(b);effBtns.appendChild(b);
+  });
+  effRow.appendChild(effLabel);effRow.appendChild(effBtns);block.appendChild(effRow);
+  return block;
+}
+ 
+function makeBenchRow(p){
+  const row=document.createElement('div');row.className='bench-row';
+  const check=document.createElement('div');check.className='bench-check';check.onclick=()=>toggleActive(p.id);addTouch(check);
+  const info=document.createElement('div');info.style.cssText='flex:1;font-size:.78rem;color:var(--muted);';
+  info.textContent=`#${p.num} ${p.name}`;
+  row.appendChild(check);row.appendChild(info);return row;
+}
+ 
+function toggleActive(id){
+  const p=roster.find(r=>r.id===id);if(!p)return;
+  if(p.active){
+    if(p.clockInAt!==null&&p.clockInAt!==undefined){p.minsPlayed=(p.minsPlayed||0)+Math.max(0,p.clockInAt-clockSec);p.clockInAt=null;}
+    p.active=false;
+  } else {p.clockInAt=clockSec;p.active=true;}
+  saveRoster();renderScoringPanel();
+}
+ 
+// ── LONG PRESS ──
+function addLongPress(el,fn){
+  let timer;
+  el.addEventListener('touchstart',()=>{timer=setTimeout(fn,600);},{passive:true});
+  el.addEventListener('touchend',()=>clearTimeout(timer),{passive:true});
+  el.addEventListener('touchmove',()=>clearTimeout(timer),{passive:true});
+}
+ 
+// ── SUBTRACT CONFIRM ──
+const effortLabels={gbp:'GBP',bbp:'BBP',gbo:'GBO',bbo:'BBO',gwu:'GWU',bwu:'BWU',ghlp:'GHLP',bhlp:'BHLP'};
+const tradKeyLabels={'2-pt Make':'2-pt Make','2-pt Miss':'2-pt Miss','3-pt Make':'3-pt Make','3-pt Miss':'3-pt Miss','Free Throw':'Free Throw','Rebound':'REB','Steal':'STL','Block':'BLK','Turnover':'TO'};
+function showSubtractConfirm(p,key,type){
+  const label=type==='effort'?(effortLabels[key]||key):(tradKeyLabels[key]||key);
+  const popup=document.createElement('div');popup.className='confirm-popup';
+  popup.innerHTML=`<div class="confirm-box"><p>−1 ${label} for ${p.name}?</p><div class="confirm-btns"><button class="confirm-yes" id="cfYes">Yes</button><button class="confirm-no" id="cfNo">Cancel</button></div></div>`;
+  document.body.appendChild(popup);
+  document.getElementById('cfYes').onclick=()=>{if(type==='trad')subtractTrad(p,key);else subtractEffort(p,key);popup.remove();};
+  document.getElementById('cfNo').onclick=()=>popup.remove();
+}
+function subtractTrad(p,key){
+  const s=pTrad[p.id];let pts=0;
+  if(key==='2-pt Make'&&s.fg2m>0){s.fg2m--;s.fg2a--;pts=-2;}
+  else if(key==='2-pt Miss'&&s.fg2a>s.fg2m){s.fg2a--;}
+  else if(key==='3-pt Make'&&s.fg3m>0){s.fg3m--;s.fg3a--;pts=-3;}
+  else if(key==='3-pt Miss'&&s.fg3a>s.fg3m){s.fg3a--;}
+  else if(key==='Free Throw'&&s.ftm>0){s.ftm--;s.fta--;pts=-1;}
+  else if(key==='Rebound'&&s.reb>0){s.reb--;}
+  else if(key==='Steal'&&s.stl>0){s.stl--;}
+  else if(key==='Block'&&s.blk>0){s.blk--;}
+  else if(key==='Turnover'&&s.to>0){s.to--;}
+  if(pts<0){scores.campo=Math.max(0,scores.campo+pts);document.getElementById('campoScore').textContent=scores.campo;saveScoreCampo();}
+  saveTrad();addEntry('campo','−1 '+key+' (correction)',`#${p.num} ${p.name}`);
+}
+function subtractEffort(p,key){
+  if(pEffort[p.id][key]>0){pEffort[p.id][key]--;saveEffort();addEntry('campo','−1 '+(effortLabels[key]||key)+' (correction)',`#${p.num} ${p.name}`);}
+}
+ 
+// ── TEAM STAT LOGGING ──
+function logTeam(team,event,pts){
+  const s=teamSt[team];
+  if(pts>0){scores[team]=Math.max(0,scores[team]+pts);document.getElementById(team+'Score').textContent=scores[team];if(team==='campo')saveScoreCampo();else saveScoreOpp();}
+  if(event==='2-pt Make'){s.fg2m++;s.fg2a++;}else if(event==='2-pt Miss'){s.fg2a++;}
+  else if(event==='3-pt Make'){s.fg3m++;s.fg3a++;}else if(event==='3-pt Miss'){s.fg3a++;}
+  else if(event==='Free Throw'){s.ftm++;s.fta++;}else if(event==='Rebound'){s.reb++;}
+  else if(event==='Steal'){s.stl++;}else if(event==='Block'){s.blk++;}
+  else if(event==='Turnover'){s.to++;}else if(event==='Foul'){s.foul++;}
+  saveTeamSt();addEntry(team,event,team==='opp'?'Monte Vista':'');
+}
+ 
+// ── PLAYER STAT LOGGING ──
+const effortEventLabels={gbp:'Good Ball Pressure',bbp:'Bad Ball Pressure',gbo:'Good Box Out',bbo:'Bad Box Out',gwu:'Good Wall Up',bwu:'Bad Wall Up',ghlp:'Good Help',bhlp:'Bad Help'};
+function logTrad(p,event,pts){
+  const s=pTrad[p.id];
+  if(pts>0){scores.campo+=pts;document.getElementById('campoScore').textContent=scores.campo;saveScoreCampo();}
+  if(event==='2-pt Make'){s.fg2m++;s.fg2a++;}else if(event==='2-pt Miss'){s.fg2a++;}
+  else if(event==='3-pt Make'){s.fg3m++;s.fg3a++;}else if(event==='3-pt Miss'){s.fg3a++;}
+  else if(event==='Free Throw'){s.ftm++;s.fta++;}else if(event==='Rebound'){s.reb++;}
+  else if(event==='Steal'){s.stl++;}else if(event==='Block'){s.blk++;}
+  else if(event==='Turnover'){s.to++;}
+  saveTrad();addEntry('campo',event,`#${p.num} ${p.name}`);
+}
+function logEffort(p,key){pEffort[p.id][key]++;saveEffort();addEntry('campo',effortEventLabels[key]||key,`#${p.num} ${p.name}`);}
+function logCustom(){const v=document.getElementById('customNote').value.trim();if(!v)return;addEntry('neutral',v,'—');document.getElementById('customNote').value='';}
+function addEntry(team,event,player){
+  const e={team,event,player:player||'',wall:wallNow(),game:gameNow(),vid:vidNow(),period,score:`${scores.campo}–${scores.opp}`,ts:Date.now()};
+  gameLog.unshift(e);renderLogEntry(e);saveLogEntry(e);
+}
+ 
+// ── STATS PANEL ──
 function pct(m,a){return a===0?'—':`${Math.round(m/a*100)}%`;}
-function refreshStats(){
-  ['campo','opp'].forEach(t=>{
-    const s=st[t],x=t==='campo'?'c':'o';
-    document.getElementById(`s-${x}-2m`).textContent=s.fg2m;
-    document.getElementById(`s-${x}-2a`).textContent=s.fg2a;
-    document.getElementById(`s-${x}-2pct`).textContent=pct(s.fg2m,s.fg2a);
-    document.getElementById(`s-${x}-3m`).textContent=s.fg3m;
-    document.getElementById(`s-${x}-3a`).textContent=s.fg3a;
-    document.getElementById(`s-${x}-3pct`).textContent=pct(s.fg3m,s.fg3a);
-    document.getElementById(`s-${x}-ftm`).textContent=s.ftm;
-    document.getElementById(`s-${x}-fta`).textContent=s.fta;
-    document.getElementById(`s-${x}-ftpct`).textContent=pct(s.ftm,s.fta);
-    document.getElementById(`s-${x}-reb`).textContent=s.reb;
-    document.getElementById(`s-${x}-stl`).textContent=s.stl;
-    document.getElementById(`s-${x}-blk`).textContent=s.blk;
-    document.getElementById(`s-${x}-to`).textContent=s.to;
-    document.getElementById(`s-${x}-foul`).textContent=s.foul;
-    document.getElementById(`s-${x}-pts`).textContent=scores[t];
+function calcPts(s){return(s.fg2m||0)*2+(s.fg3m||0)*3+(s.ftm||0);}
+ 
+function renderStatsPanel(){
+  const panel=document.getElementById('panel-stats');
+  panel.innerHTML='';
+ 
+  if(isIPad){
+    // 1) Campo player traditional stats
+    const t1=document.createElement('div');t1.className='stat-section-title';t1.textContent='Campo — Traditional Stats';panel.appendChild(t1);
+    panel.appendChild(buildTradTable());
+    // 2) Opponent stats — right below Campo trad, above effort
+    const t3=document.createElement('div');t3.className='stat-section-title';t3.textContent='Monte Vista — Opponent Stats';panel.appendChild(t3);
+    panel.appendChild(buildSingleTeamTable('opp','Placeholder'));
+    // 3) Campo effort stats
+    const t2=document.createElement('div');t2.className='stat-section-title';t2.textContent='Campo — Effort Stats';panel.appendChild(t2);
+    panel.appendChild(buildEffortTable());
+  } else {
+    // iPhone — exact v3 3-column card (Campo | STAT | Opp)
+    panel.appendChild(buildIphoneStatsCard());
+  }
+}
+ 
+// ── IPHONE STATS: v3-style 3-column card ──
+function buildIphoneStatsCard(){
+  const sc=teamSt.campo, so=teamSt.opp;
+  const wrap=document.createElement('div');wrap.className='stat-card';
+  // Header row
+  const hdr=document.createElement('div');hdr.className='stat-card-hdr';
+  hdr.innerHTML='<div class="s-campo">CAMPO</div><div class="s-label">STAT</div><div class="s-opp">MV</div>';
+  wrap.appendChild(hdr);
+  // Helper to build a stat row
+  const addRow=(cHtml,label,oHtml)=>{
+    const row=document.createElement('div');row.className='stat-row';
+    row.innerHTML=`<div class="stat-val c">${cHtml}</div><div class="stat-lbl">${label}</div><div class="stat-val o">${oHtml}</div>`;
+    wrap.appendChild(row);
+  };
+  const fg=(m,a)=>`${m}/${a}<span class="stat-pct">${pct(m,a)}</span>`;
+  addRow(fg(sc.fg2m,sc.fg2a),'2PT FG',fg(so.fg2m,so.fg2a));
+  addRow(fg(sc.fg3m,sc.fg3a),'3PT FG',fg(so.fg3m,so.fg3a));
+  addRow(fg(sc.ftm,sc.fta),'Free Throws',fg(so.ftm,so.fta));
+  addRow(sc.reb,'Rebounds',so.reb);
+  addRow(sc.stl,'Steals',so.stl);
+  addRow(sc.blk,'Blocks',so.blk);
+  addRow(sc.to,'Turnovers',so.to);
+  addRow(sc.foul,'Fouls',so.foul);
+  addRow(scores.campo,'Points',scores.opp);
+  return wrap;
+}
+ 
+function buildSingleTeamTable(team,mascot){
+  const s=teamSt[team];
+  const color=team==='campo'?'var(--campo)':'var(--opp)';
+  const wrap=document.createElement('div');wrap.className='stat-table-wrap';
+  const hdr=document.createElement('div');hdr.className='stat-table-header opp-hdr';
+  hdr.innerHTML=`<div class="sth" style="text-align:left;color:${color}">Team</div><div class="sth">PTS</div><div class="sth">2FG</div><div class="sth">3FG</div><div class="sth">FT</div><div class="sth">REB</div><div class="sth">STL</div><div class="sth">BLK</div><div class="sth">TO</div>`;
+  const body=document.createElement('div');body.className='stat-table-body';
+  const pp=calcPts(s);
+  const v=(n)=>`<div class="spv${team==='opp'?' opp':''}${n===0?' zero':''}">${n}</div>`;
+  const row=document.createElement('div');row.className='stat-data-row opp-row'+(team==='opp'?' opp-totals':'');
+  row.innerHTML=`<div class="spn">${mascot}</div>${v(pp)}<div class="spv${team==='opp'?' opp':''}${s.fg2a===0?' zero':''}">${s.fg2m}/${s.fg2a}<span class="spct">${pct(s.fg2m,s.fg2a)}</span></div><div class="spv${team==='opp'?' opp':''}${s.fg3a===0?' zero':''}">${s.fg3m}/${s.fg3a}<span class="spct">${pct(s.fg3m,s.fg3a)}</span></div><div class="spv${team==='opp'?' opp':''}${s.fta===0?' zero':''}">${s.ftm}/${s.fta}<span class="spct">${pct(s.ftm,s.fta)}</span></div>${v(s.reb)}${v(s.stl)}${v(s.blk)}${v(s.to)}`;
+  body.appendChild(row);wrap.appendChild(hdr);wrap.appendChild(body);return wrap;
+}
+ 
+function buildTradTable(){
+  const wrap=document.createElement('div');wrap.className='stat-table-wrap';
+  const hdr=document.createElement('div');hdr.className='stat-table-header trad';
+  hdr.innerHTML='<div class="sth name">Player</div><div class="sth">MIN</div><div class="sth">PTS</div><div class="sth">2FG</div><div class="sth">3FG</div><div class="sth">FT</div><div class="sth">REB</div><div class="sth">STL</div><div class="sth">BLK</div><div class="sth">TO</div><div class="sth">Foul</div>';
+  const body=document.createElement('div');body.className='stat-table-body';
+  const tot={pts:0,fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0};
+  [...roster.filter(p=>p.active),...roster.filter(p=>!p.active)].forEach(p=>{
+    const s={...emptyTrad(),...(pTrad[p.id]||{})};
+    const pp=calcPts(s);
+    tot.pts+=pp;['fg2m','fg2a','fg3m','fg3a','ftm','fta','reb','stl','blk','to','foul'].forEach(k=>tot[k]+=(s[k]||0));
+    const row=document.createElement('div');row.className='stat-data-row trad';
+    const v=(n)=>`<div class="spv${n===0?' zero':''}">${n}</div>`;
+    row.innerHTML=`<div class="spn"><span class="num">#${p.num}</span> ${p.name}</div><div class="spv" style="font-size:.68rem;">${fmtMins(getCurrentMins(p))}</div>${v(pp)}<div class="spv${s.fg2a===0?' zero':''}">${s.fg2m}/${s.fg2a}<span class="spct">${pct(s.fg2m,s.fg2a)}</span></div><div class="spv${s.fg3a===0?' zero':''}">${s.fg3m}/${s.fg3a}<span class="spct">${pct(s.fg3m,s.fg3a)}</span></div><div class="spv${s.fta===0?' zero':''}">${s.ftm}/${s.fta}<span class="spct">${pct(s.ftm,s.fta)}</span></div>${v(s.reb)}${v(s.stl)}${v(s.blk)}${v(s.to)}${v(s.foul)}`;
+    body.appendChild(row);
+  });
+  const totRow=document.createElement('div');totRow.className='stat-data-row trad totals';
+  const v=(n)=>`<div class="spv">${n}</div>`;
+  totRow.innerHTML=`<div class="spn">TOTALS</div><div class="spv">—</div>${v(tot.pts)}<div class="spv">${tot.fg2m}/${tot.fg2a}<span class="spct">${pct(tot.fg2m,tot.fg2a)}</span></div><div class="spv">${tot.fg3m}/${tot.fg3a}<span class="spct">${pct(tot.fg3m,tot.fg3a)}</span></div><div class="spv">${tot.ftm}/${tot.fta}<span class="spct">${pct(tot.ftm,tot.fta)}</span></div>${v(tot.reb)}${v(tot.stl)}${v(tot.blk)}${v(tot.to)}${v(tot.foul)}`;
+  body.appendChild(totRow);wrap.appendChild(hdr);wrap.appendChild(body);return wrap;
+}
+ 
+function buildEffortTable(){
+  const wrap=document.createElement('div');wrap.className='stat-table-wrap';
+  const hdr=document.createElement('div');hdr.className='stat-table-header effort';
+  hdr.innerHTML='<div class="sth name">Player</div><div class="sth" style="color:#2E7D32">GBP</div><div class="sth" style="color:#C62828">BBP</div><div class="sth" style="color:#2E7D32">GBO</div><div class="sth" style="color:#C62828">BBO</div><div class="sth" style="color:#2E7D32">GWU</div><div class="sth" style="color:#C62828">BWU</div><div class="sth" style="color:#2E7D32">GHLP</div><div class="sth" style="color:#C62828">BHLP</div>';
+  const body=document.createElement('div');body.className='stat-table-body';
+  const keys=['gbp','bbp','gbo','bbo','gwu','bwu','ghlp','bhlp'];
+  const tot={gbp:0,bbp:0,gbo:0,bbo:0,gwu:0,bwu:0,ghlp:0,bhlp:0};
+  [...roster.filter(p=>p.active),...roster.filter(p=>!p.active)].forEach(p=>{
+    const s={...emptyEffort(),...(pEffort[p.id]||{})};
+    keys.forEach(k=>tot[k]+=(s[k]||0));
+    const row=document.createElement('div');row.className='stat-data-row effort';
+    const v=(n,good)=>`<div class="spv ${n===0?'zero':good?'g':'b'}">${n}</div>`;
+    row.innerHTML=`<div class="spn"><span class="num">#${p.num}</span> ${p.name}</div>${v(s.gbp,true)}${v(s.bbp,false)}${v(s.gbo,true)}${v(s.bbo,false)}${v(s.gwu,true)}${v(s.bwu,false)}${v(s.ghlp,true)}${v(s.bhlp,false)}`;
+    body.appendChild(row);
+  });
+  const totRow=document.createElement('div');totRow.className='stat-data-row effort totals';
+  const v=(n,good)=>`<div class="spv ${good?'g':'b'}">${n}</div>`;
+  totRow.innerHTML=`<div class="spn">TOTALS</div>${v(tot.gbp,true)}${v(tot.bbp,false)}${v(tot.gbo,true)}${v(tot.bbo,false)}${v(tot.gwu,true)}${v(tot.bwu,false)}${v(tot.ghlp,true)}${v(tot.bhlp,false)}`;
+  body.appendChild(totRow);wrap.appendChild(hdr);wrap.appendChild(body);return wrap;
+}
+ 
+// ── ROSTER ──
+function renderRoster(){
+  const list=document.getElementById('rosterList');if(!list)return;list.innerHTML='';
+  roster.forEach(p=>{
+    const row=document.createElement('div');row.className='roster-item';
+    row.innerHTML=`<input class="roster-num-input" value="${p.num}" onchange="updatePlayer('${p.id}','num',this.value)"><input class="roster-name-input" value="${p.name}" onchange="updatePlayer('${p.id}','name',this.value)"><button class="roster-bench-btn" onclick="toggleActive('${p.id}')">${p.active?'→ Bench':'→ Floor'}</button><button class="roster-del" onclick="deletePlayer('${p.id}')">✕</button>`;
+    list.appendChild(row);
   });
 }
-
-// ── LOG RENDER ──
-function renderEntry(e){
+function updatePlayer(id,field,val){const p=roster.find(r=>r.id===id);if(p){p[field]=val;saveRoster();renderScoringPanel();}}
+function deletePlayer(id){if(!confirm('Remove this player?'))return;roster=roster.filter(r=>r.id!==id);saveRoster();renderScoringPanel();renderRoster();}
+function addPlayer(){
+  const num=document.getElementById('newNum').value.trim()||'-';
+  const name=document.getElementById('newName').value.trim();
+  if(!name){alert('Please enter a name.');return;}
+  const id='p'+Date.now();
+  roster.push({id,num,name,active:false,minsPlayed:0,clockInAt:null});
+  pTrad[id]=emptyTrad();pEffort[id]=emptyEffort();
+  document.getElementById('newNum').value='';document.getElementById('newName').value='';
+  saveRoster();saveTrad();saveEffort();renderScoringPanel();renderRoster();
+}
+ 
+// ── LOG ──
+function renderLogEntry(e){
   const list=document.getElementById('logList');
   const tc=e.team==='campo'?'var(--campo)':e.team==='opp'?'var(--opp)':'var(--muted)';
-  const school=document.getElementById('oppSchoolInput').value.trim()||'Opp';
-  const tl=e.team==='campo'?'CAMPO':e.team==='opp'?school.toUpperCase().slice(0,8):'';
   const d=document.createElement('div');d.className='le';
   d.innerHTML=`<div class="le-dot" style="background:${tc}"></div>
-    <div class="le-txt">${tl?`<span class="le-team">${tl}</span>`:''} ${e.event}<span class="le-score">${e.score} · ${e.period}</span></div>
-    <div class="le-ts">
-      <span class="ts-line tw">⏰ ${e.wall}</span>
-      <span class="ts-line tg">🏀 ${e.game}</span>
-      <span class="ts-line tv">🎬 ${e.vid}</span>
-    </div>`;
+    <div class="le-txt">${e.player&&e.player!=='—'?`<span class="le-sub">${e.player}</span>`:''} ${e.event}<span class="le-score">${e.score} · ${e.period}</span></div>
+    <div class="le-ts"><span class="ts-line tw">⏰ ${e.wall}</span><span class="ts-line tg">🏀 ${e.game}</span><span class="ts-line tv">🎬 ${e.vid}</span></div>`;
   list.insertBefore(d,list.firstChild);
 }
-
-// ── UNDO ──
-window.undoLast=function(){
-  if(!log.length)return;
-  log.shift();
-  const l=document.getElementById('logList');
-  if(l.firstChild)l.removeChild(l.firstChild);
-  alert('Removed from view. Firebase log entry remains for record. Adjust score manually if needed.');
-};
-
-// ── EXPORT ──
+function undoLast(){if(!gameLog.length)return;gameLog.shift();const l=document.getElementById('logList');if(l.firstChild)l.removeChild(l.firstChild);alert('Removed.');}
 function buildCSV(){
-  const rows=['Period,ActualT,GameT,VideoT,Team,Event,Score'];
-  [...log].reverse().forEach(e=>rows.push(`"${e.period}","${e.wall}","${e.game}","${e.vid}","${e.team}","${e.event}","${e.score}"`));
+  const rows=['Period,ActualT,GameT,VideoT,Team,Player,Event,Score'];
+  [...gameLog].reverse().forEach(e=>rows.push(`"${e.period}","${e.wall}","${e.game}","${e.vid}","${e.team}","${e.player||''}","${e.event}","${e.score}"`));
   return rows.join('\n');
 }
-window.copyLog=function(){
-  const csv=buildCSV();
-  navigator.clipboard.writeText(csv).then(()=>alert('✅ Copied!')).catch(()=>showExportBox(csv));
-};
-window.showExportBox=function(csv){
+function copyLog(){navigator.clipboard.writeText(buildCSV()).then(()=>alert('✅ Copied!')).catch(()=>showExportBox(buildCSV()));}
+function showExportBox(csv){
   let box=document.getElementById('exportBox');
-  if(!box){
-    box=document.createElement('div');box.id='exportBox';
-    box.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;display:flex;flex-direction:column;padding:16px;gap:8px;';
-    box.innerHTML=`<div style="background:#fff;border-radius:10px;padding:10px;flex:1;display:flex;flex-direction:column;gap:8px;overflow:hidden;">
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <span style="font-size:.8rem;font-weight:600;">Select All → Copy</span>
-        <button onclick="document.getElementById('exportBox').remove()" style="background:var(--campo);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:.75rem;font-weight:600;cursor:pointer;">Close</button>
-      </div>
-      <textarea readonly style="flex:1;background:#EDEEF2;border:1px solid #D8DAE0;border-radius:8px;padding:8px;font-family:monospace;font-size:.65rem;resize:none;outline:none;">${csv}</textarea>
-    </div>`;
+  if(!box){box=document.createElement('div');box.id='exportBox';box.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:999;display:flex;flex-direction:column;padding:16px;gap:8px;';
+    box.innerHTML=`<div style="background:#fff;border-radius:10px;padding:10px;flex:1;display:flex;flex-direction:column;gap:8px;overflow:hidden;"><div style="display:flex;justify-content:space-between;"><span style="font-size:.8rem;font-weight:600;">Select All → Copy</span><button onclick="document.getElementById('exportBox').remove()" style="background:var(--campo);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:.75rem;font-weight:600;cursor:pointer;">Close</button></div><textarea readonly style="flex:1;background:#EDEEF2;border:1px solid #D8DAE0;border-radius:8px;padding:8px;font-family:monospace;font-size:.65rem;resize:none;outline:none;">${csv}</textarea></div>`;
     document.body.appendChild(box);
-  } else {
-    box.querySelector('textarea').value=csv;
-    box.style.display='flex';
-  }
-};
-
-// ── RESET ──
-window.confirmReset=function(){if(confirm('Reset the entire game? Firebase data will also be cleared.'))resetGame();};
-function resetGame(){
-  scores={campo:0,opp:0};fouls={campo:0,opp:0};toLeft={campo:4,opp:4};
-  clockSec=1200;stopClock();vidOffset=null;vidAt=null;log=[];
-  st={campo:{fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0},
-      opp:  {fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0}};
-  ['campo','opp'].forEach(t=>{
-    document.getElementById(t+'Score').textContent='0';
-    document.getElementById(t+'Fouls').textContent='0';
-    document.getElementById(t+'FoulsDisp').textContent='0';
-    renderDots(t);
-  });
-  document.getElementById('logList').innerHTML='';
-  document.getElementById('videoDisplay').textContent='—';
-  document.getElementById('periodSel').selectedIndex=0;
-  period='Half 1';
-  refreshStats();
-  db.ref(GAME).set(null).then(()=>syncDot(true));
+  } else {box.querySelector('textarea').value=csv;box.style.display='flex';}
 }
-
+ 
+// ── RESET ──
+function confirmReset(){if(!confirm('Reset entire game? Cannot be undone.'))return;
+  scores={campo:0,opp:0};fouls={campo:0,opp:0};clockSec=1200;stopClock();
+  vidOffset=null;vidAt=null;gameLog=[];
+  teamSt={campo:emptyTeamSt(),opp:emptyTeamSt()};
+  roster.forEach(p=>{p.minsPlayed=0;p.clockInAt=null;pTrad[p.id]=emptyTrad();pEffort[p.id]=emptyEffort();});
+  document.getElementById('campoScore').textContent='0';document.getElementById('oppScore').textContent='0';
+  document.getElementById('logList').innerHTML='';document.getElementById('videoDisplay').textContent='—';
+  document.getElementById('periodSel').selectedIndex=0;period='Half 1';
+  saveScoreCampo();saveScoreOpp();saveTeamSt();saveTrad();saveEffort();saveRoster();
+  db.ref(GAME+'/state/fouls').set(fouls);db.ref(GAME+'/state/period').set(period);
+  db.ref(GAME+'/state/clockSec').set(clockSec);db.ref(GAME+'/state/clockRunning').set(false);
+  db.ref(GAME+'/log').set(null);renderScoringPanel();renderClk();
+}
+ 
+// ── TOUCH FEEDBACK ──
+function addTouch(el){el.addEventListener('touchstart',()=>{el.classList.add('pressed');setTimeout(()=>el.classList.remove('pressed'),180);},{passive:true});}
+document.addEventListener('DOMContentLoaded',()=>{document.querySelectorAll('.cb,.lc,.adj-btn,.fb').forEach(b=>addTouch(b));});
+ 
+// ── INIT ──
 renderClk();
+applyView();
+initActivePlayers();
 </script>
 </body>
 </html>
