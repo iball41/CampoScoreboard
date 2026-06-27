@@ -492,8 +492,17 @@ function setClock(){
 function changePeriod(){
   const opts=['Half 1','Half 2','OT'];
   period=opts[document.getElementById('periodSel').selectedIndex];
+  // Bank minutes for all active players before resetting clock
+  roster.filter(p=>p.active).forEach(p=>{
+    if(p.clockInAt!==null&&p.clockInAt!==undefined){
+      p.minsPlayed=(p.minsPlayed||0)+Math.max(0,p.clockInAt-clockSec);
+    }
+    p.clockInAt=null;
+  });
   clockSec=period==='OT'?300:1200;
   stopClock();
+  initActivePlayers(); // sets clockInAt = new clockSec for all active
+  saveRoster();
   db.ref(GAME+'/state/period').set(period);
   db.ref(GAME+'/state/clockSec').set(clockSec);
   addEntry('neutral',period+' Started','—');
@@ -774,13 +783,22 @@ function renderStatsPanel(){
  
 // ── IPHONE STATS: v3-style 3-column card ──
 function buildIphoneStatsCard(){
-  const sc=teamSt.campo, so=teamSt.opp;
+  // Sum Campo stats from player trad data (since iPad logs per-player, not teamSt)
+  const sc={fg2m:0,fg2a:0,fg3m:0,fg3a:0,ftm:0,fta:0,reb:0,stl:0,blk:0,to:0,foul:0};
+  roster.forEach(p=>{
+    const s=pTrad[p.id]||{};
+    sc.fg2m+=(s.fg2m||0);sc.fg2a+=(s.fg2a||0);
+    sc.fg3m+=(s.fg3m||0);sc.fg3a+=(s.fg3a||0);
+    sc.ftm+=(s.ftm||0);sc.fta+=(s.fta||0);
+    sc.reb+=(s.reb||0);sc.stl+=(s.stl||0);
+    sc.blk+=(s.blk||0);sc.to+=(s.to||0);
+    sc.foul+=(s.foul||0);
+  });
+  const so=teamSt.opp; // Opp is always logged via logTeam, so teamSt is correct
   const wrap=document.createElement('div');wrap.className='stat-card';
-  // Header row
   const hdr=document.createElement('div');hdr.className='stat-card-hdr';
-  hdr.innerHTML='<div class="s-campo">CAMPO</div><div class="s-label">STAT</div><div class="s-opp">VAN</div>';
+  hdr.innerHTML='<div class="s-campo">CAMPO</div><div class="s-label">STAT</div><div class="s-opp">OPP</div>';
   wrap.appendChild(hdr);
-  // Helper to build a stat row
   const addRow=(cHtml,label,oHtml)=>{
     const row=document.createElement('div');row.className='stat-row';
     row.innerHTML=`<div class="stat-val c">${cHtml}</div><div class="stat-lbl">${label}</div><div class="stat-val o">${oHtml}</div>`;
